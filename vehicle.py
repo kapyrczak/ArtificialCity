@@ -86,9 +86,9 @@ class Vehicle:
         if self.direction == "down" and index_x + 1 >= len(grid[index_y]):
             index_x -= len(grid[index_x])
 
-        if self.direction == "right" or self.direction == "left":
+        if self.direction in ("right", "left"):
             ahead = self.check_horizontal(grid, index_x, index_y)
-        elif self.direction == "up" or self.direction == "down":
+        elif self.direction in ("up", "down"):
             ahead = self.check_vertical(grid, index_x, index_y)
         return ahead
 
@@ -118,9 +118,9 @@ class Vehicle:
 
     def keep_safe(self, ahead):
         '''Slow down, if distance to vehicle ahead is not safe'''
-        if self.direction == "right" or self.direction == "left":
+        if self.direction in ("right", "left"):
             self.keep_safe_horizontal(ahead)
-        elif self.direction == "up" or self.direction == "down":
+        elif self.direction in ("up", "down"):
             self.keep_safe_vertical(ahead)
 
     def keep_safe_horizontal(self, ahead):
@@ -151,9 +151,9 @@ class Vehicle:
         if rnd < 1 - self.slowdown_probability:
             return
 
-        if self.direction == "right" or self.direction == "left":
+        if self.direction in ("right", "left"):
             self.slow_down(0)
-        elif self.direction == "up" or self.direction == "down":
+        elif self.direction in ("up", "down"):
             self.slow_down(1)
 
     def slow_down(self, index):
@@ -168,9 +168,9 @@ class Vehicle:
 
     def move(self, grid, index_x, index_y):
         '''Move the vehicle and return a grid with it moved'''
-        if self.direction == "right" or self.direction == "left":
+        if self.direction in ("right", "left"):
             new_grid = self.move_horizontal(grid, index_x, index_y)
-        elif self.direction == "up" or self.direction == "down":
+        elif self.direction in ("up", "down"):
             new_grid = self.move_vertical(grid, index_x, index_y)
         return new_grid
 
