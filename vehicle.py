@@ -14,7 +14,6 @@ Nagel-Schreckenberg model simulation steps:
 """
 
 import random
-import copy
 
 class Vehicle:
     """
@@ -32,158 +31,71 @@ class Vehicle:
          current - current/starting velocity
     safe_distance - distance to the vehicle ahead considered to be safe
         TODO: Calculating based on velocity?
+    slowdown_probability - probability of the vehice slowing down in
+        'randomization' phase
+    travelled:
+        1 - distance from the beggining
     """
     def __init__(self, length=5, width=2,
-                 v_max=14, v_change=1, current=[0, 0], direction="up",
+                 v_max=14, v_change=1, current=0,
                  safe_distance=1, slowdown_probability=0.3,
-                 on_screen=[0, 0]):
-        if direction == "up":
-            current[1] *= -1
-            v_change = [0, v_change*-1]
-        elif direction == "down":
-            v_change = [0, v_change]
-        elif direction == "left":
-            current[0] *= -1
-            v_change = [v_change*-1, 0]
-        elif direction == "right":
-            v_change = [v_change, 0]
-
+                 travelled=0):
         self.safe_distance = safe_distance
         self.size = {"length": length, "width": width}
         self.max_velocity = v_max
         self.velocity = current
         self.velocity_change = v_change
         self.slowdown_probability = slowdown_probability
-        self.on_screen = on_screen
-        self.direction = direction
+        self.travelled = travelled
         self.moved = False
 
-    def advance(self, grid, index_x, index_y):
+    def advance(self, vehicle_ahead):
         '''Advance the simulation by one step'''
+        if self.moved:
+            return
+
         self.speed_up()
 
-        vehicle_ahead = self.check_ahead(grid, index_x, index_y)
         if vehicle_ahead is not None:
             self.keep_safe(vehicle_ahead)
 
         self.randomize()
-        new_grid = self.move(grid, index_x, index_y)
+        self.move()
         self.moved = True
-        return new_grid
 
     def speed_up(self):
         '''Accelerate'''
-        if abs(self.velocity[0]) < self.max_velocity:
-            self.velocity[0] += self.velocity_change[0]
-        if abs(self.velocity[1]) < self.max_velocity:
-            self.velocity[1] += self.velocity_change[1]
-
-    def check_ahead(self, grid, index_x, index_y):
-        '''Find closest car ahead'''
-        if self.direction == "right" and index_y + 1 >= len(grid[index_x]):
-            index_y -= len(grid[index_x])
-
-        if self.direction == "down" and index_x + 1 >= len(grid[index_y]):
-            index_x -= len(grid[index_x])
-
-        if self.direction in ("right", "left"):
-            ahead = self.check_horizontal(grid, index_x, index_y)
-        elif self.direction in ("up", "down"):
-            ahead = self.check_vertical(grid, index_x, index_y)
-        return ahead
-
-    def check_horizontal(self, grid, index_x, index_y):
-        '''Check for a car ahead in x axis'''
-        border = index_y + 1 + self.velocity[0]
-        for i in range(index_y+1, border):
-            if i >= len(grid[index_x]):
-                j = i - len(grid[index_x])
-            else:
-                j = i
-            if grid[index_x][j] != " ":
-                return grid[index_x][j]
-        return None
-
-    def check_vertical(self, grid, index_x, index_y):
-        '''Check for a car ahead in y axis'''
-        border = index_x + 1 + self.velocity[1]
-        for i in range(index_x+1, border):
-            if i >= len(grid):
-                j = i - len(grid)
-            else:
-                j = i
-            if grid[j][index_y] != " ":
-                return grid[j][index_y]
-        return None
+        if self.velocity < self.max_velocity:
+            self.velocity += self.velocity_change
+        self.velocity = min(self.velocity, self.max_velocity)
 
     def keep_safe(self, ahead):
         '''Slow down, if distance to vehicle ahead is not safe'''
-        if self.direction in ("right", "left"):
-            self.keep_safe_horizontal(ahead)
-        elif self.direction in ("up", "down"):
-            self.keep_safe_vertical(ahead)
+        dist = self.distance(ahead)
+        if dist < self.safe_distance + self.velocity:
+            self.velocity = dist
 
-    def keep_safe_horizontal(self, ahead):
-        '''Decrease horizontal velocity if it is not safe'''
-        dist = self.distance_horizontal(ahead)
-        if dist < self.safe_distance + self.velocity[0]:
-            self.velocity[0] = dist
-
-    def distance_horizontal(self, vehicle):
-        '''Return distance in x axis between
+    def distance(self, vehicle):
+        '''Return distance between
         self and vehicle passed as argument'''
-        return abs(vehicle.on_screen[0] - self.on_screen[0])
-
-    def keep_safe_vertical(self, ahead):
-        '''Decrease vertical velocity if it is not safe'''
-        dist = self.distance_vertical(ahead)
-        if dist < self.safe_distance + self.velocity[1]:
-            self.velocity[1] = dist
-
-    def distance_vertical(self, vehicle):
-        '''Return distance in t axis between
-        self and vehicle passed as argument'''
-        return abs(vehicle.on_screen[1] - self.on_screen[1])
+        return vehicle.travelled - self.travelled
 
     def randomize(self):
         '''with set probability slow down by 1 step'''
         rnd = random.random()
         if rnd < 1 - self.slowdown_probability:
             return
+        self.slow_down()
 
-        if self.direction in ("right", "left"):
-            self.slow_down(0)
-        elif self.direction in ("up", "down"):
-            self.slow_down(1)
+    def slow_down(self):
+        '''Decrease vehicle's velocity'''
+        changed = self.velocity - self.velocity_change
+        self.velocity = max(0, changed)
 
-    def slow_down(self, index):
-        '''Decrease vehicle's velocity in a proper axis
-            index=0 for horizontal slow down,
-            index=1 for vertical slow down'''
-        changed = self.velocity[index] - self.velocity_change[index]
-        if self.velocity[index] * changed < 0:
-            self.velocity[index] = 0
-        else:
-            self.velocity[index] = changed
-
-    def move(self, grid, index_x, index_y):
+    def move(self):
         '''Move the vehicle and return a grid with it moved'''
-        if self.direction in ("right", "left"):
-            new_grid = self.move_horizontal(grid, index_x, index_y)
-        elif self.direction in ("up", "down"):
-            new_grid = self.move_vertical(grid, index_x, index_y)
-        return new_grid
+        self.travelled += self.velocity
 
-    def move_horizontal(self, grid, index_x, index_y):
-        '''Move the vehicle in x axis'''
-        new_grid = copy.copy(grid)
-        new_index = index_y + self.velocity[0]
-        if new_index >= len(grid[index_x]):
-            new_index -= len(grid[index_x])
-        new_grid[index_x][index_y], new_grid[index_x][new_index] = \
-            new_grid[index_x][new_index], new_grid[index_x][index_y]
-        return new_grid
-
-    def move_vertical(self, grid, index_x, index_y):
-        '''Move the vehicle in y axis'''
-        return ''
+    def unblock(self):
+        '''allow vehicle to move again'''
+        self.moved = False
