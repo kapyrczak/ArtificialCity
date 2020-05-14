@@ -14,7 +14,6 @@ Nagel-Schreckenberg model simulation steps:
 """
 
 import random
-import copy
 
 class Vehicle:
     """
@@ -32,93 +31,71 @@ class Vehicle:
          current - current/starting velocity
     safe_distance - distance to the vehicle ahead considered to be safe
         TODO: Calculating based on velocity?
+    slowdown_probability - probability of the vehice slowing down in
+        'randomization' phase
+    travelled:
+        1 - distance from the beggining
     """
     def __init__(self, length=5, width=2,
-                 v_max=14, v_change=1, current=[0, 0], direction="up",
+                 v_max=14, v_change=1, current=0,
                  safe_distance=1, slowdown_probability=0.3,
-                 on_screen=[0, 0]):
-        if direction == "up":
-            v_max *= -1
-            current[1] *= -1
-            v_change = [0, v_change*-1]
-        elif direction == "down":
-            v_change = [0, v_change]
-        elif direction == "left":
-            v_max *= -1
-            current[0] *= -1
-            v_change = [v_change*-1, 0]
-        elif direction == "right":
-            v_change = [v_change, 0]
-
+                 travelled=0):
         self.safe_distance = safe_distance
         self.size = {"length": length, "width": width}
         self.max_velocity = v_max
         self.velocity = current
         self.velocity_change = v_change
         self.slowdown_probability = slowdown_probability
-        self.on_screen = on_screen
+        self.travelled = travelled
         self.moved = False
 
-    def advance(self, grid, index):
+    def advance(self, vehicle_ahead):
         '''Advance the simulation by one step'''
+        if self.moved:
+            return
+
         self.speed_up()
-        vehicle_ahead = self.check_ahead(grid, index)
-        if vehicle_ahead != None:
+
+        if vehicle_ahead is not None:
             self.keep_safe(vehicle_ahead)
+
         self.randomize()
-        new_grid = self.move(grid, index)
+        self.move()
         self.moved = True
-        return new_grid
 
     def speed_up(self):
         '''Accelerate'''
-        if self.velocity[0] < self.max_velocity:
-            self.velocity[0] += self.velocity_change[0]
-        if self.velocity[1] < self.max_velocity:
-            self.velocity[1] += self.velocity_change[1]
-
-    def check_ahead(self, grid, index):
-        '''Find closest car ahead'''
-        if index + 1 >= len(grid):
-            index -= len(grid)
-
-        border = index+1+self.velocity[0]
-        for i in range(index+1, border):
-            if i >= len(grid):
-                j = i - len(grid)
-            else:
-                j = i
-            if grid[j] != " ":
-                return grid[j]
-        return
+        if self.velocity < self.max_velocity:
+            self.velocity += self.velocity_change
+        self.velocity = min(self.velocity, self.max_velocity)
 
     def keep_safe(self, ahead):
         '''Slow down, if distance to vehicle ahead is not safe'''
         dist = self.distance(ahead)
-        if dist < self.safe_distance + self.velocity[0]:
-            self.velocity[0] = dist
+        if dist < self.safe_distance + self.velocity:
+            self.velocity = dist
 
     def distance(self, vehicle):
-        '''Return distance between self and vehicle passed as argument'''
-        return abs(vehicle.on_screen[0] - self.on_screen[0])
+        '''Return distance between
+        self and vehicle passed as argument'''
+        return vehicle.travelled - self.travelled
 
     def randomize(self):
         '''with set probability slow down by 1 step'''
         rnd = random.random()
         if rnd < 1 - self.slowdown_probability:
             return
+        self.slow_down()
 
-        changed = self.velocity[0] - self.velocity_change[0]
-        if self.velocity[0] * changed < 0:
-            self.velocity[0] = 0
-        else:
-            self.velocity[0] = changed
+    def slow_down(self):
+        '''Decrease vehicle's velocity'''
+        changed = self.velocity - self.velocity_change
+        self.velocity = max(0, changed)
 
-    def move(self, grid, index):
-        '''Move the vehicle -> In this class or on board?'''
-        new_grid = copy.copy(grid)
-        new_index = index + self.velocity[0]
-        if new_index >= len(grid):
-            new_index -= len(grid)
-        new_grid[index], new_grid[new_index] = new_grid[new_index], new_grid[index]
-        return new_grid
+    def move(self):
+        '''Move the vehicle and return a grid with it moved'''
+        self.travelled += self.velocity
+
+    def unblock(self):
+        '''allow vehicle to move again'''
+        self.moved = False
