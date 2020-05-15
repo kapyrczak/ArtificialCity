@@ -1,4 +1,6 @@
 import pygame
+import vehicle
+import lane as l
 import config
 from visualisation import Visualisation
 
@@ -7,20 +9,16 @@ win = pygame.display.set_mode(config.screen_size)
 pygame.display.set_caption("Artificial City")
 clock = pygame.time.Clock()
 
+visualisation = Visualisation(win, config.lane_width, config.cell_size)
 
-grid = [None] *100
-grid[0] = 1
-visualisation = Visualisation(win, config.lane_width, config.cell_size, grid)
+CAR_LANES = {
+        1: l.Lane(vehicles=[vehicle.Vehicle(), vehicle.Vehicle(travelled=4)]),
+        2: l.Lane(),
+        3: l.Lane(),
+        4: l.Lane()
+        }
+PEDESTRIAN_LANES = {}
 
-
-def gridUpdate(grid, r):
-    if r % 2 == 0:
-        grid = [1] + grid
-    else:
-        grid = [None] + grid
-    grid.pop()
-    return grid
-r = 0
 # main loop
 running = True
 while running:
@@ -31,13 +29,14 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    #visualisation.draw()
-    r = r + 1
-    visualisation.drawLane(grid, 100)
-    for i in range(len(grid)):
-        if grid[i] == 1:
-            visualisation.drawCar(i*config.cell_size*4)
-    grid = gridUpdate(grid, r)
+    for lane in CAR_LANES.values():
+        lane.update()
+
+    # for lane in PEDESTRIAN_LANES.values():
+    #     lane.update()
+
+    visualisation.draw(CAR_LANES, PEDESTRIAN_LANES)
     pygame.display.update()
 
 pygame.quit()
+
