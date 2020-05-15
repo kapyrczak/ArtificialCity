@@ -17,10 +17,6 @@ import random
 
 class Vehicle:
     """
-    Distances measured in METERS
-     1 m/s = 3.6 km/h, so
-     50 km/h (city speed limit) ~= 14 m/s
-
     size:
          length - length of the vehicle
          width - width of the vehicle
@@ -33,8 +29,7 @@ class Vehicle:
         TODO: Calculating based on velocity?
     slowdown_probability - probability of the vehice slowing down in
         'randomization' phase
-    travelled:
-        1 - distance from the beggining
+    travelled - distance from the beggining of the lane
     """
     def __init__(self, length=5, width=2,
                  v_max=14, v_change=1, current=0,
@@ -48,20 +43,6 @@ class Vehicle:
         self.slowdown_probability = slowdown_probability
         self.travelled = travelled
         self.moved = False
-
-    def advance(self, vehicle_ahead):
-        '''Advance the simulation by one step'''
-        if self.moved:
-            return
-
-        self.speed_up()
-
-        if vehicle_ahead is not None:
-            self.keep_safe(vehicle_ahead)
-
-        self.randomize()
-        self.move()
-        self.moved = True
 
     def speed_up(self):
         '''Accelerate'''
