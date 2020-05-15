@@ -31,35 +31,22 @@ class Vehicle:
         'randomization' phase
     travelled - distance from the beggining of the lane
     """
-    def __init__(self, length=5, width=2,
+    def __init__(self, length=4, width=2,
                  v_max=14, v_change=1, current=0,
-                 safe_distance=1, slowdown_probability=0.3,
+                 slowdown_probability=0.3,
                  travelled=0):
-        self.safe_distance = safe_distance
         self.size = {"length": length, "width": width}
         self.max_velocity = v_max
         self.velocity = current
         self.velocity_change = v_change
         self.slowdown_probability = slowdown_probability
         self.travelled = travelled
-        self.moved = False
 
     def speed_up(self):
         '''Accelerate'''
         if self.velocity < self.max_velocity:
             self.velocity += self.velocity_change
         self.velocity = min(self.velocity, self.max_velocity)
-
-    def keep_safe(self, ahead):
-        '''Slow down, if distance to vehicle ahead is not safe'''
-        dist = self.distance(ahead)
-        if dist < self.safe_distance + self.velocity:
-            self.velocity = dist
-
-    def distance(self, vehicle):
-        '''Return distance between
-        self and vehicle passed as argument'''
-        return vehicle.travelled - self.travelled
 
     def randomize(self):
         '''with set probability slow down by 1 step'''
@@ -76,7 +63,3 @@ class Vehicle:
     def move(self):
         '''Move the vehicle and return a grid with it moved'''
         self.travelled += self.velocity
-
-    def unblock(self):
-        '''allow vehicle to move again'''
-        self.moved = False
