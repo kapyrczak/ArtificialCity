@@ -20,8 +20,9 @@ class Visualisation():
         self.drawVehicles(CAR_LANES, PEDESTRIAN_LANES)
 
     def drawVehicles(self, CAR_LANES, PEDESTRIAN_LANES):
-        for lane in CAR_LANES:
-            self.drawCarOnLane(lane.key(), lane.value().vehicles)
+        for key, lane in CAR_LANES.items():
+            self.drawCarOnLane(key, lane.vehicles)
+            print(key, lane.v_max)
         # for lane in PEDESTRIAN_LANES:
         #     self.drawPedestrianOnLane(lane.key(), lane.value())
         # for lane in TRAM_LANES:
@@ -30,14 +31,14 @@ class Visualisation():
     def drawCarOnLane(self, lane_number, cars):
         if lane_number == 1:
             for car in cars:
-                self.drawCar(self.width - car.travelled, (self.height - self.lane * 4) / 2 + 3 * self.lane)
+                self.drawCar(self.width - car.travelled*self.px - 4*self.px, (self.height - self.lane * 4) / 2 + 1.5 * self.lane)
         elif lane_number == 2:
             for car in cars:
-                self.drawCar(car.travelled, (self.height - self.lane * 4) / 2 + 4 * self.lane)
+                self.drawCar(car.travelled*self.px, (self.height - self.lane * 4) / 2 + 2.5 * self.lane )
 
     def drawCar(self, x, y):
         car = pygame.Surface((4 * self.px, 2 * self.px), pygame.SRCALPHA)
-        car.fill(red)
+        car.fill(black)
         self.win.blit(car, (x * self.px, y))
 
     def drawGrid(self):
