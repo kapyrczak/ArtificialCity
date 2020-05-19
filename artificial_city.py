@@ -17,6 +17,7 @@ CAR_LANES = {
         3: l.Lane(),
         4: l.Lane()
         }
+
 PEDESTRIAN_LANES = {}
 
 # main loop
@@ -39,4 +40,5 @@ while running:
     pygame.display.update()
 
 pygame.quit()
+
 
