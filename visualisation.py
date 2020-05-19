@@ -20,8 +20,9 @@ class Visualisation():
         #self.drawVehicles(CAR_LANES, PEDESTRIAN_LANES)
 
     def drawVehicles(self, CAR_LANES, PEDESTRIAN_LANES):
-        for lane in CAR_LANES:
-            self.drawCarOnLane(lane.key(), lane.value().vehicles)
+        for key, lane in CAR_LANES.items():
+            self.drawCarOnLane(key, lane.vehicles)
+            print(key, lane.v_max)
         # for lane in PEDESTRIAN_LANES:
         #     self.drawPedestrianOnLane(lane.key(), lane.value())
         # for lane in TRAM_LANES:

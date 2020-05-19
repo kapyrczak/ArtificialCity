@@ -1,5 +1,5 @@
 import pygame
-import vehicle
+#import vehicle
 import lane as l
 import config
 from visualisation import Visualisation
@@ -11,11 +11,11 @@ clock = pygame.time.Clock()
 
 visualisation = Visualisation(win, config.lane_width, config.cell_size)
 
+tps = 50
+
 CAR_LANES = {
-        1: l.Lane(vehicles=[vehicle.Vehicle(), vehicle.Vehicle(travelled=4)]),
-        2: l.Lane(),
-        3: l.Lane(),
-        4: l.Lane()
+        1: l.Lane(speed_limit=100, ticks_per_second=tps),
+        2: l.Lane(speed_limit=20, ticks_per_second=tps)
         }
 
 PEDESTRIAN_LANES = {}
@@ -24,7 +24,7 @@ PEDESTRIAN_LANES = {}
 running = True
 while running:
     # pygame.time.delay(50)
-    clock.tick(10)
+    clock.tick(tps)
 
     for event in pygame.event.get():  # event - wszystko co zrobi użytkownik, np kliknięcie, nacisniecie klawisza itd
         if event.type == pygame.QUIT:
