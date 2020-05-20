@@ -17,14 +17,15 @@ class Lane:
     ticks_per_second - number of simulation ticks / second;
         used to adjust speed limit and vlocity changes of the vehicles
     """
-    def __init__(self, length=100, vehicles=[], spawn_probability=0.01,
-                 speed_limit=14, ticks_per_second=30):
+    def __init__(self, length=100, spawn_probability=0.5,
+                 speed_limit=14, ticks_per_second=1):
         self.length = length
-        self.vehicles = vehicles
+        self.vehicles = []
         self.spawn_probability = spawn_probability
         self.speed_limit = speed_limit
         self.ticks_per_second = ticks_per_second
         self.v_max = 0
+        self.starting_velocity = speed_limit
 
     def update(self):
         '''Move every car on lane, destroy ones that are out of border,
@@ -32,7 +33,7 @@ class Lane:
         self.tick_vehicles()
         self.clean_up()
         self.spawn()
-        
+
         v_m = 0
         for car in self.vehicles:
             self.v_max = max(v_m, car.velocity)
@@ -45,9 +46,15 @@ class Lane:
         for car in self.vehicles:
             car.randomize()
 
+        for i in range(1, len(self.vehicles)):
+            prev = self.vehicles[i-1]
+            curr = self.vehicles[i]
+            
+            prev.keep_safe(curr)
+
         for car in self.vehicles:
             car.move()
-            car.moved = True
+
 
     def clean_up(self):
         '''Delete cars that went too far'''
@@ -63,19 +70,37 @@ class Lane:
         if random.random() < self.spawn_probability:
             self.add_vehicle()
 
-    def add_vehicle(self, length=5, width=2,
-                    v_change=2, current=0,
-                    slowdown_probability=0.05,
+    def add_vehicle(self, length=4, width=2,
+                    v_change=1,
+                    slowdown_probability=0.5,
                     travelled=0):
         '''Add a new vehicle to the lane'''
+        if len(self.vehicles) != 0 and self.vehicles[0].travelled <= 0:
+            return
+        
         new_vehicle = vehicle.Vehicle(
             length, width,
             self.speed_limit/self.ticks_per_second,
-            v_change/self.ticks_per_second, current,
+            v_change/self.ticks_per_second,
+            self.starting_velocity/self.ticks_per_second,
             slowdown_probability,
             travelled)
+
         self.vehicles.insert(0, new_vehicle)
 
+    def printl(self):
+        '''Print the lane on the console'''
+        count = -1
+        index = 0
+        while count < self.length-1:
+            count += 1
+            if index >= len(self.vehicles):
+                print("_", end='')
+                continue
 
-def _get_travelled(car):
-    return car.travelled
+            if count < self.vehicles[index].travelled:
+                print("_", end='')
+            else:
+                print("#", end='')
+                index += 1
+        print("|| Current max:" + str(self.v_max) + " | Limit:" + str(self.speed_limit))
