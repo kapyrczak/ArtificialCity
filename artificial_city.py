@@ -11,11 +11,10 @@ clock = pygame.time.Clock()
 
 visualisation = Visualisation(win, config.lane_width, config.cell_size)
 
-tps = 50
+tps = 100
 
 CAR_LANES = {
-        1: l.Lane(speed_limit=100, ticks_per_second=tps),
-        2: l.Lane(speed_limit=20, ticks_per_second=tps)
+        2: l.Lane(speed_limit=3, ticks_per_second=tps)
         }
 PEDESTRIAN_LANES = {}
 
