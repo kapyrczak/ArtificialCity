@@ -31,7 +31,7 @@ class Vehicle:
     """
     def __init__(self, length=4, width=2,
                  v_max=14, v_change=1, current=0,
-                 slowdown_probability=0.3,
+                 slowdown_probability=0.5,
                  travelled=0):
         self.size = {"length": length, "width": width}
         self.max_velocity = v_max
@@ -41,6 +41,7 @@ class Vehicle:
         self.travelled = travelled
         self.slow_duration = 0
         self.safe_distance = 1
+
     def speed_up(self):
         '''Accelerate'''
         if self.velocity < self.max_velocity:
@@ -65,7 +66,7 @@ class Vehicle:
 
     def slow_down(self):
         '''Decrease vehicle's velocity'''
-        changed = self.velocity - self.velocity_change
+        changed = self.velocity - (self.velocity_change * 2)
         self.velocity = max(0, changed)
 
     def move(self):

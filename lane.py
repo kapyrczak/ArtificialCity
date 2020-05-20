@@ -8,6 +8,7 @@ Created on Thu May 14 10:26:05 2020
 
 import random
 import vehicle
+import config
 
 class Lane:
     """
@@ -17,8 +18,8 @@ class Lane:
     ticks_per_second - number of simulation ticks / second;
         used to adjust speed limit and vlocity changes of the vehicles
     """
-    def __init__(self, length=100, spawn_probability=0.5,
-                 speed_limit=14, ticks_per_second=1):
+    def __init__(self, length=100, spawn_probability=config.car_spawn_prob,
+                 speed_limit=config.car_speed_limit, ticks_per_second=config.tps):
         self.length = length
         self.vehicles = []
         self.spawn_probability = spawn_probability
@@ -71,11 +72,12 @@ class Lane:
             self.add_vehicle()
 
     def add_vehicle(self, length=4, width=2,
-                    v_change=1,
-                    slowdown_probability=0.5,
+                    v_change=config.car_v_change,
+                    slowdown_probability=config.car_slow_prob,
                     travelled=0):
         '''Add a new vehicle to the lane'''
-        if len(self.vehicles) != 0 and self.vehicles[0].travelled <= 0:
+        if len(self.vehicles) != 0 and \
+            self.vehicles[0].travelled - self.vehicles[0].size["length"] <= 0:
             return
         
         new_vehicle = vehicle.Vehicle(
@@ -84,7 +86,7 @@ class Lane:
             v_change/self.ticks_per_second,
             self.starting_velocity/self.ticks_per_second,
             slowdown_probability,
-            travelled)
+            travelled-length)
 
         self.vehicles.insert(0, new_vehicle)
 
