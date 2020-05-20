@@ -1,5 +1,5 @@
 import pygame
-# import vehicle
+import vehicle
 import lane as l
 import config
 from visualisation import Visualisation
@@ -14,9 +14,25 @@ visualisation = Visualisation(win, config.lane_width, config.cell_size, config.c
 
 tps = 50
 
+# CAR_LANES = {
+#     1: l.Lane(speed_limit=100, ticks_per_second=tps),
+#     2: l.Lane(speed_limit=20, ticks_per_second=tps)
+# }
+
+car = vehicle.Vehicle()
+myvehicles = [car]
 CAR_LANES = {
-    1: l.Lane(speed_limit=100, ticks_per_second=tps),
-    2: l.Lane(speed_limit=20, ticks_per_second=tps)
+    1: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
+    2: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
+    3: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
+    4: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
+    5: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
+    6: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
+    7: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
+    8: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
+    9: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
+    10: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
+    11: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
 }
 
 PEDESTRIAN_LANES = {}
@@ -31,8 +47,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    for lane in CAR_LANES.values():
-        lane.update()
+    #for lane in CAR_LANES.values():
+    #    lane.update()
 
     # for lane in PEDESTRIAN_LANES.values():
     #     lane.update()

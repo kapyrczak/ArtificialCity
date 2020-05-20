@@ -20,7 +20,7 @@ class Visualisation():
     def draw(self, CAR_LANES, PEDESTRIAN_LANES):
         self.win.fill(white)
         self.__drawIntersection(self.win, self.lane, self.px, self.width, self.height)
-        # self.drawVehicles(CAR_LANES, PEDESTRIAN_LANES)
+        self.drawVehicles(CAR_LANES, PEDESTRIAN_LANES)
 
     def drawVehicles(self, CAR_LANES, PEDESTRIAN_LANES):
         for key, lane in CAR_LANES.items():
@@ -34,30 +34,33 @@ class Visualisation():
     def drawCarOnLane(self, lane_number, cars):
         if lane_number == 4:
             for car in cars:
-                self.drawCar(self.width - car.travelled * self.px - 4 * self.px, self.carlane_c.get(lane_number))
+                self.drawCar(self.width - car.travelled * self.px - 4 * self.px, self.carlane_c.get(lane_number), 'h')
         elif lane_number == 1:
             for car in cars:
-                self.drawCar((self.width - self.lane * 6 - 26 * self.px) / 2 - 4 * self.px - car.travelled,
-                             self.carlane_c.get(lane_number))
+                self.drawCar((self.width - self.lane * 6 - 26 * self.px) / 2 - 4 * self.px - car.travelled * self.px,
+                             self.carlane_c.get(lane_number), 'h')
         elif lane_number == 5:
             for car in cars:
                 self.drawCar(
-                    (self.width - self.lane * 6 - 26 * self.px) / 2 + 6 * self.lane + 26 * self.px + car.travelled,
-                    self.carlane_c.get(lane_number))
+                    (self.width - self.lane * 6 - 26 * self.px) / 2 + 6 * self.lane + 26 * self.px + car.travelled * self.px,
+                    self.carlane_c.get(lane_number), 'h')
         elif lane_number in [2, 3]:
             for car in cars:
-                self.drawCar(car.travelled * self.px, self.carlane_c.get(lane_number))
+                self.drawCar(car.travelled * self.px, self.carlane_c.get(lane_number), 'h')
         elif lane_number in [6, 7, 8]:
             for car in cars:
-                self.drawCar(self.carlane_c.get(lane_number), car.travelled * self.px)
+                self.drawCar(self.carlane_c.get(lane_number), car.travelled * self.px, 'v')
         elif lane_number in [9, 10, 11]:
             for car in cars:
-                self.drawCar(self.carlane_c.get(lane_number), self.height - car.travelled * self.px - 4 * self.px)
+                self.drawCar(self.carlane_c.get(lane_number), self.height - car.travelled * self.px - 4 * self.px, 'v')
 
-    def drawCar(self, x, y):
-        car = pygame.Surface((4 * self.px, 2 * self.px), pygame.SRCALPHA)
+    def drawCar(self, x, y, dir):
+        if dir == 'h':
+            car = pygame.Surface((4 * self.px, 2 * self.px), pygame.SRCALPHA)
+        else:
+            car = pygame.Surface((2 * self.px, 4 * self.px), pygame.SRCALPHA)
         car.fill(black)
-        self.win.blit(car, (x * self.px, y))
+        self.win.blit(car, (x, y))
 
     def drawGrid(self):
         for x in range(self.width // self.px):
@@ -118,7 +121,7 @@ class Visualisation():
 
         # lines
 
-        self.drawGrid()
+        # self.drawGrid()
 
         for i in range(0, 5):
             pygame.draw.line(win, darkgrey, (0, (win_y - lane * 4) / 2 + i * lane),
