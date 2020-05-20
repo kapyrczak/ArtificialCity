@@ -14,10 +14,10 @@ visualisation = Visualisation(win, config.lane_width, config.cell_size, config.c
 
 tps = 50
 
-# CAR_LANES = {
-#     1: l.Lane(speed_limit=100, ticks_per_second=tps),
-#     2: l.Lane(speed_limit=20, ticks_per_second=tps)
-# }
+TRAM_LANES = {
+    1: l.Lane(speed_limit=100, ticks_per_second=tps),
+    2: l.Lane(speed_limit=20, ticks_per_second=tps)
+}
 
 car = vehicle.Vehicle()
 myvehicles = [car]
@@ -47,13 +47,13 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    #for lane in CAR_LANES.values():
-    #    lane.update()
+    for lane in TRAM_LANES.values():
+       lane.update()
 
     # for lane in PEDESTRIAN_LANES.values():
     #     lane.update()
 
-    visualisation.draw(CAR_LANES, PEDESTRIAN_LANES)
+    visualisation.draw(CAR_LANES, PEDESTRIAN_LANES, TRAM_LANES)
     pygame.display.update()
 
 pygame.quit()

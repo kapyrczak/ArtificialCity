@@ -17,19 +17,19 @@ class Visualisation():
         self.zebralane_c = zlc
         self.tramlane_c = tlc
 
-    def draw(self, CAR_LANES, PEDESTRIAN_LANES):
+    def draw(self, CAR_LANES, PEDESTRIAN_LANES, TRAM_LANES):
         self.win.fill(white)
         self.__drawIntersection(self.win, self.lane, self.px, self.width, self.height)
-        self.drawVehicles(CAR_LANES, PEDESTRIAN_LANES)
+        self.drawVehicles(CAR_LANES, PEDESTRIAN_LANES, TRAM_LANES)
 
-    def drawVehicles(self, CAR_LANES, PEDESTRIAN_LANES):
+    def drawVehicles(self, CAR_LANES, PEDESTRIAN_LANES, TRAM_LANES):
         for key, lane in CAR_LANES.items():
             self.drawCarOnLane(key, lane.vehicles)
             # print(key, lane.v_max)
         # for lane in PEDESTRIAN_LANES:
         #     self.drawPedestrianOnLane(lane.key(), lane.value())
-        # for lane in TRAM_LANES:
-        #     self.drawTramOnLane(lane.key(), lane.value())
+        for key, lane in TRAM_LANES.items():
+             self.drawTramOnLane(key, lane.vehicles)
 
     def drawCarOnLane(self, lane_number, cars):
         if lane_number == 4:
@@ -53,6 +53,16 @@ class Visualisation():
         elif lane_number in [9, 10, 11]:
             for car in cars:
                 self.drawCar(self.carlane_c.get(lane_number), self.height - car.travelled * self.px - 4 * self.px, 'v')
+
+    def drawTramOnLane(self, lane_number, cars):
+        if lane_number == 1:
+            for car in cars:
+                self.drawCar(self.width - car.travelled * self.px - 4 * self.px, self.tramlane_c.get(lane_number), 'h')
+        else:
+            for car in cars:
+                self.drawCar(car.travelled * self.px, self.tramlane_c.get(lane_number), 'h')
+
+
 
     def drawCar(self, x, y, dir):
         if dir == 'h':
