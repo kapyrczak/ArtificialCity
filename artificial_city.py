@@ -41,14 +41,16 @@ PEDESTRIAN_LANES = {}
 running = True
 while running:
     # pygame.time.delay(50)
-    clock.tick(tps)
+    clock.tick(10)
 
     for event in pygame.event.get():  # event - wszystko co zrobi użytkownik, np kliknięcie, nacisniecie klawisza itd
         if event.type == pygame.QUIT:
             running = False
 
     for lane in TRAM_LANES.values():
-       lane.update()
+        lane.update()
+    for lane in CAR_LANES.values():
+        lane.update()
 
     # for lane in PEDESTRIAN_LANES.values():
     #     lane.update()
