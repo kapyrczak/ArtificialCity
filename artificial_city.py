@@ -12,7 +12,7 @@ clock = pygame.time.Clock()
 visualisation = Visualisation(win, config.lane_width, config.cell_size, config.c_lanes_coordinates,
                               config.z_lanes_coordinates, config.t_lanes_coordinates)
 
-tps = 50
+tps = 100
 
 TRAM_LANES = {
     1: l.Lane(speed_limit=100, ticks_per_second=tps),

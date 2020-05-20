@@ -25,8 +25,6 @@ class Vehicle:
          max - max velocity
          v_change - rate of velocity change between ticks
          current - current/starting velocity
-    safe_distance - distance to the vehicle ahead considered to be safe
-        TODO: Calculating based on velocity?
     slowdown_probability - probability of the vehice slowing down in
         'randomization' phase
     travelled - distance from the beggining of the lane
@@ -41,12 +39,22 @@ class Vehicle:
         self.velocity_change = v_change
         self.slowdown_probability = slowdown_probability
         self.travelled = travelled
-
+        self.slow_duration = 0
+        self.safe_distance = 1
     def speed_up(self):
         '''Accelerate'''
         if self.velocity < self.max_velocity:
             self.velocity += self.velocity_change
         self.velocity = min(self.velocity, self.max_velocity)
+
+    def keep_safe(self, vehicle_ahead):
+        '''Slow down to not crash into other vehicle'''
+        ahead_travelled = vehicle_ahead.travelled - vehicle_ahead.size["length"]
+        ahead_travelled -= self.safe_distance
+        if self.travelled > ahead_travelled:
+            diff = self.travelled - ahead_travelled
+            new_velocity = self.velocity - diff
+            self.velocity = max(0, new_velocity)
 
     def randomize(self):
         '''with set probability slow down by 1 step'''
