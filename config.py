@@ -5,8 +5,9 @@ lane_width = 4 * cell_size  # in meters
 tps = 100
 car_speed_limit = 50
 car_spawn_prob = 0.01
-car_slow_prob = 0.5
+car_slow_prob = 0.45
 car_v_change = 1
+car_slow_duration = 2
 
 car_lanes = [
     # horizontal lanes -> y
