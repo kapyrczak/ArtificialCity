@@ -32,15 +32,17 @@ class Vehicle:
     def __init__(self, length=4, width=2,
                  v_max=14, v_change=1, current=0,
                  slowdown_probability=0.5,
-                 travelled=0):
+                 travelled=0, slow_duration=2, safe_distance_coefficient=2):
         self.size = {"length": length, "width": width}
         self.max_velocity = v_max
         self.velocity = current
         self.velocity_change = v_change
         self.slowdown_probability = slowdown_probability
         self.travelled = travelled
-        self.slow_duration = 0
+        self.slow_duration = slow_duration
+        self.slow_left = 0
         self.safe_distance = 1
+        self.safe_dist_coeff = safe_distance_coefficient
 
     def speed_up(self):
         '''Accelerate'''
@@ -60,14 +62,24 @@ class Vehicle:
     def randomize(self):
         '''with set probability slow down by 1 step'''
         rnd = random.random()
-        if rnd < 1 - self.slowdown_probability:
+        if self.slow_left > 0:
+            self.slow_left = self.slow_duration
+            self.slow_down()
+        elif rnd < 1 - self.slowdown_probability:
             return
-        self.slow_down()
+        else:
+            self.slow_left -= 1
+            self.slow_down()
 
     def slow_down(self):
         '''Decrease vehicle's velocity'''
         changed = self.velocity - (self.velocity_change * 2)
         self.velocity = max(0, changed)
+
+    def calculate_safe_distance(self):
+        '''Calculate the safe distance to the preceding car'''
+        dist = self.velocity * self.safe_dist_coeff
+        self.safe_distance = max(1, dist)
 
     def move(self):
         '''Move the vehicle and return a grid with it moved'''

@@ -44,7 +44,7 @@ while running:
             running = False
 
     for lane in CAR_LANES.values():
-       lane.update()
+        lane.update()
 
     # for lane in PEDESTRIAN_LANES.values():
     #     lane.update()
