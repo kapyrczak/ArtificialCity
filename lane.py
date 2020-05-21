@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu May 14 10:26:05 2020
-
 @author: jakub
 """
 
 import random
 import vehicle
+import config
 
 class Lane:
     """
@@ -17,8 +17,8 @@ class Lane:
     ticks_per_second - number of simulation ticks / second;
         used to adjust speed limit and vlocity changes of the vehicles
     """
-    def __init__(self, length=100, spawn_probability=0.5,
-                 speed_limit=14, ticks_per_second=1):
+    def __init__(self, length=100, spawn_probability=config.car_spawn_prob,
+                 speed_limit=config.car_speed_limit, ticks_per_second=config.tps):
         self.length = length
         self.vehicles = []
         self.spawn_probability = spawn_probability
@@ -26,6 +26,7 @@ class Lane:
         self.ticks_per_second = ticks_per_second
         self.v_max = 0
         self.starting_velocity = speed_limit
+        self.lit = False
 
     def update(self):
         '''Move every car on lane, destroy ones that are out of border,
@@ -49,8 +50,9 @@ class Lane:
         for i in range(1, len(self.vehicles)):
             prev = self.vehicles[i-1]
             curr = self.vehicles[i]
-            
+            prev.calculate_safe_distance()
             prev.keep_safe(curr)
+
 
         for car in self.vehicles:
             car.move()
@@ -71,22 +73,52 @@ class Lane:
             self.add_vehicle()
 
     def add_vehicle(self, length=4, width=2,
-                    v_change=1,
-                    slowdown_probability=0.5,
-                    travelled=0):
+                    v_change=config.car_v_change,
+                    slowdown_probability=config.car_slow_prob,
+                    travelled=0, slow_duration=config.car_slow_duration):
         '''Add a new vehicle to the lane'''
-        if len(self.vehicles) != 0 and self.vehicles[0].travelled <= 0:
+        if len(self.vehicles) != 0 and \
+            self.vehicles[0].travelled - self.vehicles[0].size["length"] <= 0:
             return
-        
+
         new_vehicle = vehicle.Vehicle(
             length, width,
             self.speed_limit/self.ticks_per_second,
             v_change/self.ticks_per_second,
             self.starting_velocity/self.ticks_per_second,
             slowdown_probability,
-            travelled-length)
+            travelled-length, slow_duration, self.ticks_per_second/10)
 
         self.vehicles.insert(0, new_vehicle)
+
+    def add_traffic_lights(self, distance):
+        '''Add traffic lights that are `distance` away from the beggining of
+        the lane'''
+        if self.lit:
+            return
+
+        index = self.find_index(distance)
+        traffic_lights = vehicle.Vehicle(1, 4, 0, 0, 0, 0, distance, 0, 0)
+        self.vehicles.insert(index, traffic_lights)
+        self.lit = True
+
+    def find_index(self, distance):
+        '''Find correct index for something that is `distance` away'''
+        index = 0
+        while index < len(self.vehicles) and \
+            self.vehicles[index].travelled < distance:
+            index += 1
+        return index
+
+    def delete_traffic_lights(self):
+        '''Delete traffic lights from the lane'''
+        if not self.lit:
+            return
+
+        for index, veh in enumerate(self.vehicles):
+            if veh.max_velocity == 0:
+                self.vehicles.pop(index)
+        self.lit = False
 
     def printl(self):
         '''Print the lane on the console'''
