@@ -84,7 +84,7 @@ class Lane:
             v_change/self.ticks_per_second,
             self.starting_velocity/self.ticks_per_second,
             slowdown_probability,
-            travelled)
+            travelled-length)
 
         self.vehicles.insert(0, new_vehicle)
 

@@ -22,17 +22,17 @@ TRAM_LANES = {
 car = vehicle.Vehicle()
 myvehicles = [car]
 CAR_LANES = {
-    1: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
-    2: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
-    3: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
-    4: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
-    5: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
-    6: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
-    7: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
-    8: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
-    9: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
-    10: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
-    11: l.Lane(speed_limit=100, ticks_per_second=tps, vehicles=myvehicles),
+    #1: l.Lane(speed_limit=100, ticks_per_second=tps),
+    # 2: l.Lane(speed_limit=100, ticks_per_second=tps),
+    # 3: l.Lane(speed_limit=100, ticks_per_second=tps),
+    # 4: l.Lane(speed_limit=100, ticks_per_second=tps),
+    #5: l.Lane(speed_limit=100, ticks_per_second=tps),
+    6: l.Lane(speed_limit=50, ticks_per_second=tps),
+    7: l.Lane(speed_limit=50, ticks_per_second=tps),
+    8: l.Lane(speed_limit=50, ticks_per_second=tps),
+    9: l.Lane(speed_limit=50, ticks_per_second=tps),
+    10: l.Lane(speed_limit=50, ticks_per_second=tps),
+    11: l.Lane(speed_limit=50, ticks_per_second=tps),
 }
 
 PEDESTRIAN_LANES = {}
@@ -41,14 +41,14 @@ PEDESTRIAN_LANES = {}
 running = True
 while running:
     # pygame.time.delay(50)
-    clock.tick(10)
+    clock.tick(tps)
 
     for event in pygame.event.get():  # event - wszystko co zrobi użytkownik, np kliknięcie, nacisniecie klawisza itd
         if event.type == pygame.QUIT:
             running = False
 
-    for lane in TRAM_LANES.values():
-        lane.update()
+    # for lane in TRAM_LANES.values():
+    #     lane.update()
     for lane in CAR_LANES.values():
         lane.update()
 
