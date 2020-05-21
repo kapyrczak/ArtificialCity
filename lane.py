@@ -81,7 +81,8 @@ class Lane:
                     travelled=0, slow_duration=config.car_slow_duration):
         '''Add a new vehicle to the lane'''
         if len(self.vehicles) != 0 and \
-            self.vehicles[0].travelled - self.vehicles[0].size["length"] <= 0:
+            self.vehicles[0].travelled - self.vehicles[0].size["length"] <= \
+                -self.vehicles[0].size["length"]:
             return
 
         new_vehicle = vehicle.Vehicle(
