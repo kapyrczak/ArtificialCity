@@ -27,6 +27,7 @@ class Lane:
         self.ticks_per_second = ticks_per_second
         self.v_max = 0
         self.starting_velocity = speed_limit
+        self.lit = False
 
     def update(self):
         '''Move every car on lane, destroy ones that are out of border,
@@ -90,6 +91,35 @@ class Lane:
             travelled-length, slow_duration, self.ticks_per_second/10)
 
         self.vehicles.insert(0, new_vehicle)
+
+    def add_traffic_lights(self, distance):
+        '''Add traffic lights that are `distance` away from the beggining of
+        the lane'''
+        if self.lit:
+            return
+
+        index = self.find_index(distance)
+        traffic_lights = vehicle.Vehicle(1, 4, 0, 0, 0, 0, distance, 0, 0)
+        self.vehicles.insert(index, traffic_lights)
+        self.lit = True
+
+    def find_index(self, distance):
+        '''Find correct index for something that is `distance` away'''
+        index = 0
+        while index < len(self.vehicles) and \
+            self.vehicles[index].travelled < distance:
+            index += 1
+        return index
+
+    def delete_traffic_lights(self):
+        '''Delete traffic lights from the lane'''
+        if not self.lit:
+            return
+
+        for index, veh in enumerate(self.vehicles):
+            if veh.max_velocity == 0:
+                self.vehicles.pop(index)
+        self.lit = False
 
     def printl(self):
         '''Print the lane on the console'''

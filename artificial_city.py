@@ -31,6 +31,8 @@ CAR_LANES = {
     11: l.Lane(),
 }
 
+lights_test = CAR_LANES[6]
+
 PEDESTRIAN_LANES = {}
 
 # main loop
@@ -42,6 +44,14 @@ while running:
     for event in pygame.event.get():  # event - wszystko co zrobi użytkownik, np kliknięcie, nacisniecie klawisza itd
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                if lights_test.lit:
+                    lights_test.delete_traffic_lights()
+                else:
+                    # TODO: specify trafic lights distance in config.py
+                    # (for each lane)
+                    lights_test.add_traffic_lights(50)
 
     for lane in CAR_LANES.values():
         lane.update()
