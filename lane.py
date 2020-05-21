@@ -28,6 +28,7 @@ class Lane:
         self.v_max = 0
         self.starting_velocity = speed_limit
         self.lit = False
+        self.went_through = 0
 
     def update(self):
         '''Move every car on lane, destroy ones that are out of border,
@@ -66,6 +67,7 @@ class Lane:
             if self.vehicles[index].travelled > self.length:
                 self.vehicles.pop(index)
                 index -= 1
+                self.went_through += 1
             index += 1
 
     def spawn(self):
