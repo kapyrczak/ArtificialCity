@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu May 14 10:26:05 2020
-
 @author: jakub
 """
 
