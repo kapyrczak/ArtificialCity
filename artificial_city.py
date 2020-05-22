@@ -18,11 +18,11 @@ TRAM_LANES = {
 }
 
 CAR_LANES = {
-#    1: l.Lane(),
-#    2: l.Lane(),
-#    3: l.Lane(),
-#    4: l.Lane(),
-#    5: l.Lane(),
+    1: l.Lane(length=25),
+    2: l.Lane(length=25),
+    3: l.Lane(length=22),
+    4: l.Lane(length=22),
+    5: l.Lane(),
     6: l.Lane(),
     7: l.Lane(),
     8: l.Lane(),
