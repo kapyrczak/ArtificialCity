@@ -18,6 +18,9 @@ def print_lanes(lanes):
     print("-"*LANE_LEN + "--")
 
 if __name__ == "__main__":
+    arr = [1,2,3,4,5]
+    print(arr[2:])
+    
     LANES = {
         1: l.Lane(LANE_LEN, speed_limit=3),
         2: l.Lane(LANE_LEN, speed_limit=4),

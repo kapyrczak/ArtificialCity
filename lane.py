@@ -17,8 +17,9 @@ class Lane:
     ticks_per_second - number of simulation ticks / second;
         used to adjust speed limit and vlocity changes of the vehicles
     """
-    def __init__(self, length=100, spawn_probability=config.car_spawn_prob,
+    def __init__(self, number=1, length=100, spawn_probability=config.car_spawn_prob,
                  speed_limit=config.car_speed_limit, ticks_per_second=config.tps):
+        self.number = number
         self.length = length
         self.vehicles = []
         self.spawn_probability = spawn_probability
@@ -35,6 +36,8 @@ class Lane:
         self.tick_vehicles()
         self.clean_up()
         self.spawn()
+
+        self.vehicles.sort(key=lambda car: car.travelled)
 
         v_m = 0
         for car in self.vehicles:
@@ -75,24 +78,37 @@ class Lane:
             self.add_vehicle()
 
     def add_vehicle(self, length=4, width=2,
-                    v_change=config.car_v_change,
+                    v_change=config.car_v_change, current=-1,
                     slowdown_probability=config.car_slow_prob,
                     travelled=0, slow_duration=config.car_slow_duration):
         '''Add a new vehicle to the lane'''
+        index = self.find_index(travelled)
+
         if len(self.vehicles) != 0 and \
-            self.vehicles[0].travelled - self.vehicles[0].size["length"] <= \
-                -self.vehicles[0].size["length"]:
+            self.vehicles[index-1].travelled - self.vehicles[index-1].size["length"] <= \
+                -self.vehicles[index-1].size["length"]:
             return
+
+        if current < 0:
+            current = self.starting_velocity / self.ticks_per_second
 
         new_vehicle = vehicle.Vehicle(
             length, width,
             self.speed_limit/self.ticks_per_second,
             v_change/self.ticks_per_second,
-            self.starting_velocity/self.ticks_per_second,
+            current,
             slowdown_probability,
             travelled-length, slow_duration, self.ticks_per_second/10)
 
-        self.vehicles.insert(0, new_vehicle)
+        self.vehicles.insert(index, new_vehicle)
+
+    def find_index(self, distance):
+        '''Find correct index for something that is `distance` away'''
+        index = 0
+        while index < len(self.vehicles) and \
+            self.vehicles[index].travelled < distance:
+            index += 1
+        return index
 
     def add_traffic_lights(self, distance):
         '''Add traffic lights that are `distance` away from the beggining of
@@ -105,14 +121,6 @@ class Lane:
         self.vehicles.insert(index, traffic_lights)
         self.lit = True
 
-    def find_index(self, distance):
-        '''Find correct index for something that is `distance` away'''
-        index = 0
-        while index < len(self.vehicles) and \
-            self.vehicles[index].travelled < distance:
-            index += 1
-        return index
-
     def delete_traffic_lights(self):
         '''Delete traffic lights from the lane'''
         if not self.lit:
@@ -123,19 +131,34 @@ class Lane:
                 self.vehicles.pop(index)
         self.lit = False
 
-    def printl(self):
-        '''Print the lane on the console'''
-        count = -1
-        index = 0
-        while count < self.length-1:
-            count += 1
-            if index >= len(self.vehicles):
-                print("_", end='')
-                continue
+    def turn_into(self, other_lane, params):
+        '''turn cars from the lane to other lane (it's a intersection ater all'''
+        if other_lane is None:
+            return
 
-            if count < self.vehicles[index].travelled:
-                print("_", end='')
-            else:
-                print("#", end='')
-                index += 1
-        print("|| Current max:" + str(self.v_max) + " | Limit:" + str(self.speed_limit))
+        for index, car in enumerate(self.vehicles):
+            if car.travelled >= params[0] and car.travelled <= params[1]:
+                # get index for car on lane it will turn into
+                i = other_lane.find_index(params[2])
+
+                # if there is a turn on the lane car will turn into get where
+                # it ends
+                dist = 0
+                if self.__turn_exists_at(other_lane):
+                    dist = config.turns[other_lane.number][2]
+                
+                # check if the car can turn: there are no other cars on the lane
+                # OR there is space on the lane :
+                #   all cars are further than the intersection
+                #   OR all cars are closer than the intesection
+                if len(other_lane.vehicles) == 0 or \
+                other_lane.vehicles[i-1].travelled >= params[2] + car.size["length"] or \
+                other_lane.vehicles[i-1].travelled < dist:
+                    speed = car.velocity
+                    self.vehicles.pop(index)
+                    other_lane.add_vehicle(current=speed, travelled=params[2])
+                else:
+                    car.max_velocity = 0
+
+    def __turn_exists_at(self, other_lane):
+        return config.turns[other_lane.number] is not None
