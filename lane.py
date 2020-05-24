@@ -98,7 +98,7 @@ class Lane:
             return
 
         index = self.find_index(distance)
-        traffic_lights = vehicle.Vehicle(1, 4, 0, 0, 0, 0, distance, 0, 0)
+        traffic_lights = vehicle.Vehicle(1, 2, 0, 0, 0, 0, distance, 0, 0)
         self.vehicles.insert(index, traffic_lights)
         self.lit = True
 
