@@ -18,17 +18,17 @@ TRAM_LANES = {
 }
 
 CAR_LANES = {
-    1: l.Lane(length=25),
-    2: l.Lane(length=25),
-    3: l.Lane(length=22),
-    4: l.Lane(length=22),
-    5: l.Lane(),
-    6: l.Lane(),
-    7: l.Lane(),
-    8: l.Lane(),
-    9: l.Lane(),
-    10: l.Lane(),
-    11: l.Lane(),
+    1: l.Lane(number=1, length=25, spawn_probability=0),
+    2: l.Lane(number=2, length=25),
+    3: l.Lane(number=3, length=30),
+    4: l.Lane(number=4, length=30),
+    5: l.Lane(number=5, spawn_probability=0),
+    6: l.Lane(number=6),
+    7: l.Lane(number=7),
+    8: l.Lane(number=8),
+    9: l.Lane(number=9),
+    10: l.Lane(number=10),
+    11: l.Lane(number=11)
 }
 
 lights_test = CAR_LANES[6]
@@ -47,14 +47,20 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 if lights_test.lit:
+                    CAR_LANES[11].delete_traffic_lights()
                     lights_test.delete_traffic_lights()
                 else:
                     # TODO: specify trafic lights distance in config.py
                     # (for each lane)
+                    CAR_LANES[11].add_traffic_lights(45)
                     lights_test.add_traffic_lights(50)
 
     for lane in CAR_LANES.values():
         lane.update()
+        if config.turns[lane.number] is not None:
+            lane.turn_into(CAR_LANES[config.turns[lane.number][0]],
+                           config.turns[lane.number][1:])
+
 
     # for lane in PEDESTRIAN_LANES.values():
     #     lane.update()

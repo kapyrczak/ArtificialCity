@@ -4,10 +4,28 @@ lane_width = 4 * cell_size  # in meters
 
 tps = 100
 car_speed_limit = 50
-car_spawn_prob = 0.01
+car_spawn_prob = 0.1
 car_slow_prob = 0.45
 car_v_change = 1
 car_slow_duration = 2
+
+"""dictionary: 
+{lane_from_number: [lane_into, at_length, untill_length, appear_at_travelled]}
+untill length is necesarry because it is not very probable that a car will
+get self.travelled value that is exactly equal to the `at_length`
+appear_at_travelled is distance on which the car should appear on `lane_into`
+"""
+turns = {1: None,
+         2: None,
+         3: [6, 22, 30, 62],
+         4: [11, 22, 30, 58],
+         5: None,
+         6: [1, 42, 50, 0],
+         7: None,
+         8: None,
+         9: None,
+         10: None,
+         11: [5, 40, 45, 0]}
 
 car_lanes = [
     # horizontal lanes -> y
