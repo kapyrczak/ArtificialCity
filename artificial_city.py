@@ -57,11 +57,9 @@ while running:
 
     for lane in CAR_LANES.values():
         lane.update()
-        try:
+        if config.turns[lane.number] is not None:
             lane.turn_into(CAR_LANES[config.turns[lane.number][0]],
                            config.turns[lane.number][1:])
-        except TypeError:
-            pass
 
 
     # for lane in PEDESTRIAN_LANES.values():
