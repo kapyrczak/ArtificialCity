@@ -1,10 +1,11 @@
 import pygame
 
 # colors
-blue, darkblue = (51, 153, 255, 150), (0, 77, 128)
+blue, darkblue = (152, 203, 222, 255), (0, 77, 128)
 white, black = (255, 255, 255), (0, 0, 0)
 grey, darkgrey = (153, 153, 153), (77, 77, 77)
 red = (255, 0, 0, 150)
+darkgreen = (40,70,65)
 
 
 class Visualisation():
@@ -18,7 +19,7 @@ class Visualisation():
         self.tramlane_c = tlc
 
     def draw(self, CAR_LANES, PEDESTRIAN_LANES, TRAM_LANES):
-        self.win.fill(white)
+        self.win.fill(darkgreen)
         self.__drawIntersection(self.win, self.lane, self.px, self.width, self.height)
         self.drawVehicles(CAR_LANES, PEDESTRIAN_LANES, TRAM_LANES)
 
@@ -26,10 +27,38 @@ class Visualisation():
         for key, lane in CAR_LANES.items():
             self.drawCarOnLane(key, lane.vehicles)
             # print(key, lane.v_max)
+
         # for lane in PEDESTRIAN_LANES:
-        #     self.drawPedestrianOnLane(lane.key(), lane.value())
+        self.drawPedestrianOnLane()
+
         for key, lane in TRAM_LANES.items():
              self.drawTramOnLane(key, lane.vehicles)
+
+    def drawPedestrianOnLane(self):
+        x, y = self.zebralane_c.get(1)
+        self.drawPedestrian(x + 0.5 * self.px, y)
+        x, y = self.zebralane_c.get(2)
+        self.drawPedestrian(x + 0.25 * self.px, y - 0.25 * self.px)
+        x, y = self.zebralane_c.get(3)
+        self.drawPedestrian(x + 0.5 * self.px, y)
+        x, y = self.zebralane_c.get(4)
+        self.drawPedestrian(x + 0.25 * self.px, y - 0.25 * self.px)
+        x, y = self.zebralane_c.get(5)
+        self.drawPedestrian(x - 0.25 * self.px, y + 0.5 * self.px)
+        x, y = self.zebralane_c.get(6)
+        self.drawPedestrian(x, y)
+        x, y = self.zebralane_c.get(7)
+        self.drawPedestrian(x - 0.25 * self.px, y + 0.5 * self.px)
+        x, y = self.zebralane_c.get(8)
+        self.drawPedestrian(x, y)
+        x, y = self.zebralane_c.get(9)
+        self.drawPedestrian(x - 0.25 * self.px, y + 0.5 * self.px)
+        x, y = self.zebralane_c.get(10)
+        self.drawPedestrian(x, y)
+        x, y = self.zebralane_c.get(11)
+        self.drawPedestrian(x - 0.25 * self.px, y + 0.5 * self.px)
+        x, y = self.zebralane_c.get(12)
+        self.drawPedestrian(x, y)
 
     def drawCarOnLane(self, lane_number, cars):
         if lane_number == 4:
@@ -70,6 +99,11 @@ class Visualisation():
             car = pygame.Surface((width * self.px, length * self.px), pygame.SRCALPHA)
         car.fill(black)
         self.win.blit(car, (x, y))
+
+    def drawPedestrian(self, x, y):
+        p = pygame.Surface((0.5 * self.px, 0.5 * self.px), pygame.SRCALPHA)
+        p.fill(black)
+        self.win.blit(p, (x, y))
 
     def drawGrid(self):
         for x in range(self.width // self.px):
@@ -114,9 +148,9 @@ class Visualisation():
         zebra_vshort = pygame.Surface((lane * 0.5, lane * 4), pygame.SRCALPHA)
         zebra_h = pygame.Surface((lane * 3, lane * 0.5), pygame.SRCALPHA)
 
-        zebra_vlong.fill(red)
-        zebra_vshort.fill(red)
-        zebra_h.fill(red)
+        zebra_vlong.fill(white)
+        zebra_vshort.fill(white)
+        zebra_h.fill(white)
 
         win.blit(zebra_vlong, ((win_x - lane * 6 - 26 * px) / 2 - lane, (win_y - lane * 4) / 2))
         win.blit(zebra_vshort, (
