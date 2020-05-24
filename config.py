@@ -1,6 +1,6 @@
 cell_size = 9  # in px
-screen_size = width, height = 100 * cell_size, 100 * cell_size
-lane_width = 4 * cell_size  # in meters
+screen_size = width, height = 100 * cell_size, 100 * cell_size # meters * px
+lane_width = 4 * cell_size  # meters * px
 
 tps = 100
 car_speed_limit = 50
@@ -27,34 +27,40 @@ turns = {1: None,
          10: None,
          11: [5, 38, 45, 0]}
 
+
+'''
+dictinaries:
+-> car_lanes: [ lane_number : x or y initial position]
+-> tram_lanes: [ lane_number : y initial position ]
+-> zebra_lanes: [ lane_numer : (x initial position, y initial position) ]
+'''
+
 v_first_lane_x = (width - lane_width * 6 - 26 * cell_size) / 2
 h_first_lane_x = (height - lane_width * 4) / 2
 
 car_lanes = [
     # horizontal lanes -> y
-    (1, h_first_lane_x + 0.25 * lane_width),
-    (2, h_first_lane_x + 3.25 * lane_width),
-    (3, h_first_lane_x + 4.25 * lane_width),
-    (4, h_first_lane_x + 0.25 * lane_width),
-    (5, h_first_lane_x + 3.25 * lane_width),
+    (1, h_first_lane_x),
+    (2, h_first_lane_x + 3 * lane_width),
+    (3, h_first_lane_x + 4 * lane_width),
+    (4, h_first_lane_x),
+    (5, h_first_lane_x + 3 * lane_width),
 
     # vertical lanes -> x
-    (6, v_first_lane_x + 0.25 * lane_width),
-    (7, v_first_lane_x + 1.25 * lane_width),
-    (8, v_first_lane_x + 2.25 * lane_width),
-    (9, v_first_lane_x + 26 * cell_size + 3.25 * lane_width),
-    (10, v_first_lane_x + 26 * cell_size + 4.25 * lane_width),
-    (11, v_first_lane_x + 26 * cell_size + 5.25 * lane_width),
+    (6, v_first_lane_x),
+    (7, v_first_lane_x + 1 * lane_width),
+    (8, v_first_lane_x + 2 * lane_width),
+    (9, v_first_lane_x + 26 * cell_size + 3 * lane_width),
+    (10, v_first_lane_x + 26 * cell_size + 4 * lane_width),
+    (11, v_first_lane_x + 26 * cell_size + 5 * lane_width),
 ]
 
 tram_lanes = [
-    (1, h_first_lane_x + 1.25 * lane_width),
-    (2, h_first_lane_x + 2.25 * lane_width)
+    (1, h_first_lane_x + 1 * lane_width),
+    (2, h_first_lane_x + 2 * lane_width)
 ]
 
 zebra_lanes = [
-    # x, y
-
     # vertical
     (1, (v_first_lane_x - lane_width, h_first_lane_x)),
     (2, (v_first_lane_x - 0.75 * lane_width, h_first_lane_x + lane_width * 5)),
@@ -73,7 +79,6 @@ zebra_lanes = [
 
     (11, (v_first_lane_x + 6 * lane_width + 26 * cell_size, h_first_lane_x + 4.5 * lane_width)),
     (12, (v_first_lane_x + 3 * lane_width + 26 * cell_size, h_first_lane_x + 4.75 * lane_width)),
-
 ]
 
 c_lanes_coordinates = dict(car_lanes)

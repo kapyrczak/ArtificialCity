@@ -5,7 +5,7 @@ blue, darkblue = (152, 203, 222, 255), (0, 77, 128)
 white, black = (255, 255, 255), (0, 0, 0)
 grey, darkgrey = (153, 153, 153), (77, 77, 77)
 red = (255, 0, 0, 150)
-darkgreen = (40,70,65)
+darkgreen = (40, 70, 65)
 
 
 class Visualisation():
@@ -18,21 +18,24 @@ class Visualisation():
         self.zebralane_c = zlc
         self.tramlane_c = tlc
 
+    'main method used in every iteration to draw intersection and vehicles (including pedestrians)'
+
     def draw(self, CAR_LANES, PEDESTRIAN_LANES, TRAM_LANES):
         self.win.fill(darkgreen)
-        self.__drawIntersection(self.win, self.lane, self.px, self.width, self.height)
+        self.__drawIntersection()
         self.drawVehicles(CAR_LANES, PEDESTRIAN_LANES, TRAM_LANES)
 
     def drawVehicles(self, CAR_LANES, PEDESTRIAN_LANES, TRAM_LANES):
         for key, lane in CAR_LANES.items():
             self.drawCarOnLane(key, lane.vehicles)
-            # print(key, lane.v_max)
+
+        for key, lane in TRAM_LANES.items():
+            self.drawTramOnLane(key, lane.vehicles)
 
         # for lane in PEDESTRIAN_LANES:
         self.drawPedestrianOnLane()
 
-        for key, lane in TRAM_LANES.items():
-             self.drawTramOnLane(key, lane.vehicles)
+    'method used for drawing pedestrians on their new position on every lane'
 
     def drawPedestrianOnLane(self):
         x, y = self.zebralane_c.get(1)
@@ -60,37 +63,53 @@ class Visualisation():
         x, y = self.zebralane_c.get(12)
         self.drawPedestrian(x, y)
 
+    'method used for drawing cars on their new position on every lane'
+
     def drawCarOnLane(self, lane_number, cars):
         if lane_number == 4:
             for car in cars:
-                self.drawCar(self.width - car.travelled * self.px - 4 * self.px, self.carlane_c.get(lane_number), 'h', car.size.get("length"), car.size.get("width"))
+                self.drawCar(self.width - car.travelled * self.px - 4 * self.px,
+                             self.carlane_c.get(lane_number) + 0.25 * self.lane, 'h', car.size.get("length"),
+                             car.size.get("width"))
         elif lane_number == 1:
             for car in cars:
                 self.drawCar((self.width - self.lane * 6 - 26 * self.px) / 2 - 4 * self.px - car.travelled * self.px,
-                             self.carlane_c.get(lane_number), 'h', car.size.get("length"), car.size.get("width"))
+                             self.carlane_c.get(lane_number) + 0.25 * self.lane, 'h', car.size.get("length"),
+                             car.size.get("width"))
         elif lane_number == 5:
             for car in cars:
-                self.drawCar(
-                    (self.width - self.lane * 6 - 26 * self.px) / 2 + 6 * self.lane + 26 * self.px + car.travelled * self.px,
-                    self.carlane_c.get(lane_number), 'h', car.size.get("length"), car.size.get("width"))
+                self.drawCar((
+                                         self.width - self.lane * 6 - 26 * self.px) / 2 + 6 * self.lane + 26 * self.px + car.travelled * self.px,
+                             self.carlane_c.get(lane_number) + 0.25 * self.lane, 'h', car.size.get("length"),
+                             car.size.get("width"))
         elif lane_number in [2, 3]:
             for car in cars:
-                self.drawCar(car.travelled * self.px, self.carlane_c.get(lane_number), 'h', car.size.get("length"), car.size.get("width"))
+                self.drawCar(car.travelled * self.px, self.carlane_c.get(lane_number) + 0.25 * self.lane, 'h',
+                             car.size.get("length"), car.size.get("width"))
         elif lane_number in [6, 7, 8]:
             for car in cars:
-                self.drawCar(self.carlane_c.get(lane_number), car.travelled * self.px, 'v', car.size.get("length"), car.size.get("width"))
+                self.drawCar(self.carlane_c.get(lane_number) + 0.25 * self.lane, car.travelled * self.px, 'v',
+                             car.size.get("length"), car.size.get("width"))
         elif lane_number in [9, 10, 11]:
             for car in cars:
-                self.drawCar(self.carlane_c.get(lane_number), self.height - car.travelled * self.px - 4 * self.px, 'v', car.size.get("length"), car.size.get("width"))
+                self.drawCar(self.carlane_c.get(lane_number) + 0.25 * self.lane,
+                             self.height - car.travelled * self.px - 4 * self.px, 'v', car.size.get("length"),
+                             car.size.get("width"))
+
+    'method used for drawing pedestrians on their new position on every lane'
 
     def drawTramOnLane(self, lane_number, cars):
         if lane_number == 1:
             for car in cars:
-                self.drawCar(self.width - car.travelled * self.px - 4 * self.px, self.tramlane_c.get(lane_number), 'h', car.size.get("length"), car.size.get("width"))
+                self.drawCar(self.width - car.travelled * self.px - 4 * self.px,
+                             self.tramlane_c.get(lane_number) + 0.25 * self.lane, 'h', car.size.get("length"),
+                             car.size.get("width"))
         else:
             for car in cars:
-                self.drawCar(car.travelled * self.px, self.tramlane_c.get(lane_number), 'h', car.size.get("length"), car.size.get("width"))
+                self.drawCar(car.travelled * self.px, self.tramlane_c.get(lane_number) + 0.25 * self.lane, 'h',
+                             car.size.get("length"), car.size.get("width"))
 
+    'method used for drawing a single car'
 
     def drawCar(self, x, y, dir, length, width):
         if dir == 'h':
@@ -100,10 +119,14 @@ class Visualisation():
         car.fill(black)
         self.win.blit(car, (x, y))
 
+    'method used for drawing a single pedestrian'
+
     def drawPedestrian(self, x, y):
         p = pygame.Surface((0.5 * self.px, 0.5 * self.px), pygame.SRCALPHA)
         p.fill(black)
         self.win.blit(p, (x, y))
+
+    'method used for drawing a single car'
 
     def drawGrid(self):
         for x in range(self.width // self.px):
@@ -111,91 +134,88 @@ class Visualisation():
                 rect = pygame.Rect(x * self.px, y * self.px, self.px, self.px)
                 pygame.draw.rect(self.win, black, rect, 1)
 
-    def drawLane(self):
-        car_lane_vertical = pygame.Surface((self.width, self.lane), pygame.SRCALPHA)
-        car_lane_vertical.fill(grey)
-        self.win.blit(car_lane_vertical, (0, self.height / 2 - self.lane / 2))
+    'method used for drawing the intersection'
 
-    def __drawIntersection(self, win, lane, px, win_x, win_y):
+    def __drawIntersection(self):
 
-        # car
-        car_lane_vertical = pygame.Surface((lane, win_y), pygame.SRCALPHA)
-        car_lane_vertical.fill(grey)
-        car_lane_horizontal = pygame.Surface(((win_x - lane * 6 - 26 * px) / 2, lane), pygame.SRCALPHA)
-        car_lane_horizontal.fill(grey)
+        # rectangles
+        car_lane_v = pygame.Surface((self.lane, self.height), pygame.SRCALPHA)
+        car_lane_v.fill(grey)
+        car_lane_h = pygame.Surface((self.carlane_c.get(6), self.lane), pygame.SRCALPHA)
+        car_lane_h.fill(grey)
 
+        tram_lanes = pygame.Surface((self.width, self.lane), pygame.SRCALPHA)
+        tram_lanes.fill(blue)
+
+        zebra_v_long = pygame.Surface((self.lane * 0.5, self.lane * 5), pygame.SRCALPHA)
+        zebra_v_short = pygame.Surface((self.lane * 0.5, self.lane * 4), pygame.SRCALPHA)
+        zebra_h = pygame.Surface((self.lane * 3, self.lane * 0.5), pygame.SRCALPHA)
+
+        zebra_v_long.fill(white)
+        zebra_v_short.fill(white)
+        zebra_h.fill(white)
+
+        ' car lanes '
         # horizontal
         for i in range(0, 4):
-            win.blit(car_lane_horizontal, (0, (win_y - lane * 4) / 2 + i * lane))
-            win.blit(car_lane_horizontal, (
-                (win_x - lane * 6 - 26 * px) / 2 + 26 * px + 6 * lane, (win_y - lane * 4) / 2 + i * lane))
+            self.win.blit(car_lane_h, (0, self.carlane_c.get(1) + i * self.lane))
+            self.win.blit(car_lane_h,
+                          (self.carlane_c.get(6) + 26 * self.px + 6 * self.lane, self.carlane_c.get(1) + i * self.lane))
 
-        win.blit(car_lane_horizontal, (0, (win_y - lane * 4) / 2 + 4 * lane))
+        self.win.blit(car_lane_h, (0, self.carlane_c.get(1) + 4 * self.lane))
 
         # vertical
         for i in range(0, 3):
-            win.blit(car_lane_vertical, ((win_x - lane * 6 - 26 * px) / 2 + i * lane, 0))
-            win.blit(car_lane_vertical, ((win_x - lane * 6 - 26 * px) / 2 + 26 * px + (3 + i) * lane, 0))
+            self.win.blit(car_lane_v, (self.carlane_c.get(6) + i * self.lane, 0))
+            self.win.blit(car_lane_v, (self.carlane_c.get(6) + 26 * self.px + (3 + i) * self.lane, 0))
 
-        # tram
-        tramlanes = pygame.Surface((win_x, lane), pygame.SRCALPHA)
-        tramlanes.fill(blue)
+        ' tram lanes '
         for i in range(0, 2):
-            win.blit(tramlanes, (0, (win_y - lane * 4) / 2 + lane + i * lane))
+            self.win.blit(tram_lanes, (0, self.carlane_c.get(1) + self.lane + i * self.lane))
 
-        # pedestrians
-        zebra_vlong = pygame.Surface((lane * 0.5, lane * 5), pygame.SRCALPHA)
-        zebra_vshort = pygame.Surface((lane * 0.5, lane * 4), pygame.SRCALPHA)
-        zebra_h = pygame.Surface((lane * 3, lane * 0.5), pygame.SRCALPHA)
+        ' zebra lanes '
+        self.win.blit(zebra_v_long, (self.carlane_c.get(6) - self.lane, self.carlane_c.get(1)))
+        self.win.blit(zebra_v_short,
+                      (self.carlane_c.get(6) + 6 * self.lane + 26 * self.px + self.lane * 0.5, self.carlane_c.get(1)))
+        self.win.blit(zebra_h, (self.carlane_c.get(6), self.carlane_c.get(1) - self.lane))
+        self.win.blit(zebra_h, (self.carlane_c.get(6), self.carlane_c.get(1) + 5.5 * self.lane))
+        self.win.blit(zebra_h,
+                      (self.carlane_c.get(6) + 3 * self.lane + 26 * self.px, self.carlane_c.get(1) - self.lane))
+        self.win.blit(zebra_h,
+                      (self.carlane_c.get(6) + 3 * self.lane + 26 * self.px, self.carlane_c.get(1) + 4.5 * self.lane))
 
-        zebra_vlong.fill(white)
-        zebra_vshort.fill(white)
-        zebra_h.fill(white)
-
-        win.blit(zebra_vlong, ((win_x - lane * 6 - 26 * px) / 2 - lane, (win_y - lane * 4) / 2))
-        win.blit(zebra_vshort, (
-            (win_x - lane * 6 - 26 * px) / 2 + 6 * lane + 26 * px + lane * 0.5, (win_y - lane * 4) / 2))
-        win.blit(zebra_h, ((win_x - lane * 6 - 26 * px) / 2, (win_y - lane * 4) / 2 - lane))
-        win.blit(zebra_h, ((win_x - lane * 6 - 26 * px) / 2, (win_y - lane * 4) / 2 + 5.5 * lane))
-        win.blit(zebra_h,
-                 ((win_x - lane * 6 - 26 * px) / 2 + 3 * lane + 26 * px, (win_y - lane * 4) / 2 - lane))
-        win.blit(zebra_h, (
-            (win_x - lane * 6 - 26 * px) / 2 + 3 * lane + 26 * px, (win_y - lane * 4) / 2 + 4.5 * lane))
-
-        # lines
-
-        # self.drawGrid()
-
+        ' lines '
         for i in range(0, 5):
-            pygame.draw.line(win, darkgrey, (0, (win_y - lane * 4) / 2 + i * lane),
-                             ((win_x - lane * 6 - 26 * px) / 2, (win_y - lane * 4) / 2 + i * lane), 1)
-            pygame.draw.line(win, darkgrey,
-                             (((win_x - lane * 6 - 26 * px) / 2 + 6 * lane + 26 * px),
-                              ((win_y - lane * 4) / 2 + i * lane)),
-                             (win_x, ((win_y - lane * 4) / 2 + i * lane)), 1)
+            pygame.draw.line(self.win, darkgrey, (0, self.carlane_c.get(1) + i * self.lane),
+                             (self.carlane_c.get(6), self.carlane_c.get(1) + i * self.lane), 1)
+            pygame.draw.line(self.win, darkgrey, ((self.carlane_c.get(6) + 6 * self.lane + 26 * self.px),
+                                                  ((self.height - self.lane * 4) / 2 + i * self.lane)),
+                             (self.width, ((self.height - self.lane * 4) / 2 + i * self.lane)), 1)
 
-        pygame.draw.line(win, darkgrey, (0, (win_y - lane * 4) / 2 + 5 * lane),
-                         ((win_x - lane * 6 - 26 * px) / 2, (win_y - lane * 4) / 2 + 5 * lane), 1)
+        pygame.draw.line(self.win, darkgrey, (0, self.carlane_c.get(1) + 5 * self.lane),
+                         (self.carlane_c.get(6), self.carlane_c.get(1) + 5 * self.lane), 1)
 
         for i in range(0, 3):
-            pygame.draw.line(win, darkgrey, ((win_x - lane * 6 - 26 * px) / 2 + (i + 1) * lane, 0),
-                             ((win_x - lane * 6 - 26 * px) / 2 + (i + 1) * lane, win_y), 1)
-            pygame.draw.line(win, darkgrey, ((win_x - lane * 6 - 26 * px) / 2 + (i + 3) * lane + 26 * px, 0),
-                             ((win_x - lane * 6 - 26 * px) / 2 + (i + 3) * lane + 26 * px, win_y), 1)
+            pygame.draw.line(self.win, darkgrey, (self.carlane_c.get(6) + (i + 1) * self.lane, 0),
+                             (self.carlane_c.get(6) + (i + 1) * self.lane, self.height), 1)
+            pygame.draw.line(self.win, darkgrey, (self.carlane_c.get(6) + (i + 3) * self.lane + 26 * self.px, 0),
+                             (self.carlane_c.get(6) + (i + 3) * self.lane + 26 * self.px, self.height), 1)
 
-        pygame.draw.line(win, darkgrey, ((win_x - lane * 6 - 26 * px) / 2, 0),
-                         ((win_x - lane * 6 - 26 * px) / 2, (win_y - lane * 4) / 2), 1)
-        pygame.draw.line(win, darkgrey, ((win_x - lane * 6 - 26 * px) / 2 + 6 * lane + 26 * px, 0),
-                         ((win_x - lane * 6 - 26 * px) / 2 + 6 * lane + 26 * px, (win_y - lane * 4) / 2), 1)
-        pygame.draw.line(win, darkgrey, ((win_x - lane * 6 - 26 * px) / 2, (win_y - lane * 4) / 2 + 5 * lane),
-                         ((win_x - lane * 6 - 26 * px) / 2, win_y), 1)
-        pygame.draw.line(win, darkgrey, (
-            (win_x - lane * 6 - 26 * px) / 2 + 6 * lane + 26 * px, (win_y - lane * 4) / 2 + 4 * lane),
-                         ((win_x - lane * 6 - 26 * px) / 2 + 6 * lane + 26 * px, win_y), 1)
+        pygame.draw.line(self.win, darkgrey, (self.carlane_c.get(6), 0), (self.carlane_c.get(6), self.carlane_c.get(1)),
+                         1)
+        pygame.draw.line(self.win, darkgrey, (self.carlane_c.get(6) + 6 * self.lane + 26 * self.px, 0),
+                         (self.carlane_c.get(6) + 6 * self.lane + 26 * self.px, self.carlane_c.get(1)), 1)
+        pygame.draw.line(self.win, darkgrey, (self.carlane_c.get(6), self.carlane_c.get(1) + 5 * self.lane),
+                         (self.carlane_c.get(6), self.height), 1)
+        pygame.draw.line(self.win, darkgrey,
+                         (self.carlane_c.get(6) + 6 * self.lane + 26 * self.px, self.carlane_c.get(1) + 4 * self.lane),
+                         (self.carlane_c.get(6) + 6 * self.lane + 26 * self.px, self.height), 1)
 
         for i in range(1, 4):
-            pygame.draw.line(win, darkblue, (0, (win_y - lane * 4) / 2 + i * lane),
-                             (win_y, (win_y - lane * 4) / 2 + i * lane), 1)
+            pygame.draw.line(self.win, darkblue, (0, self.carlane_c.get(1) + i * self.lane),
+                             (self.height, self.carlane_c.get(1) + i * self.lane), 1)
 
-        pygame.draw.line(win, darkgrey, (0, (win_y - lane * 4) / 2 + 4 * lane),
-                         ((win_x - lane * 6 - 26 * px) / 2 + lane, (win_y - lane * 4) / 2 + 4 * lane), 1)
+        pygame.draw.line(self.win, darkgrey, (0, self.carlane_c.get(3)),
+                         (self.carlane_c.get(6) + self.lane, self.carlane_c.get(3)), 1)
+
+        # self.drawGrid()
