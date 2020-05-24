@@ -19,7 +19,7 @@ TRAM_LANES = {
 
 CAR_LANES = {
     1: l.Lane(number=1, length=25, spawn_probability=0),
-    2: l.Lane(number=2, length=25),
+    2: l.Lane(number=2, length=35),
     3: l.Lane(number=3, length=30),
     4: l.Lane(number=4, length=30),
     5: l.Lane(number=5, spawn_probability=0),
@@ -31,9 +31,9 @@ CAR_LANES = {
     11: l.Lane(number=11)
 }
 
-lights_test = CAR_LANES[6]
-
 PEDESTRIAN_LANES = {}
+
+lights_test = CAR_LANES[6]
 
 # main loop
 running = True
@@ -60,7 +60,6 @@ while running:
         if config.turns[lane.number] is not None:
             lane.turn_into(CAR_LANES[config.turns[lane.number][0]],
                            config.turns[lane.number][1:])
-
 
     # for lane in PEDESTRIAN_LANES.values():
     #     lane.update()
