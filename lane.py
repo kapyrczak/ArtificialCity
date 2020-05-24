@@ -110,6 +110,30 @@ class Lane:
             index += 1
         return index
 
+    def turn_into(self, other_lane, params):
+        '''Turn into other lane at a place described in params'''
+        turn_at = params[0]
+        turn_untill = params[1]
+        join_at = params[2]
+
+        for index, car in enumerate(self.vehicles):
+            if car.travelled >= turn_at and car.travelled <= turn_untill:
+                self.transfer_car(car, index, other_lane, join_at)
+
+    def transfer_car(self, car, index, other_lane, join_at):
+        '''Transfer the car onto another lane'''
+        velocity = car.velocity
+        new_index = other_lane.find_index(join_at) - 1
+
+        if len(other_lane.vehicles) == 0 or \
+        other_lane.vehicles[new_index].travelled >= join_at + car.size["length"] or\
+        other_lane.vehicles[new_index].travelled < join_at - 10:
+            self.vehicles.pop(index)
+            other_lane.add_vehicle(current=velocity, travelled=join_at)
+            other_lane.vehicles.sort(key=lambda car: car.travelled)
+        else:
+            car.max_velocity = 0
+
     def add_traffic_lights(self, distance):
         '''Add traffic lights that are `distance` away from the beggining of
         the lane'''
@@ -130,35 +154,3 @@ class Lane:
             if veh.max_velocity == 0:
                 self.vehicles.pop(index)
         self.lit = False
-
-    def turn_into(self, other_lane, params):
-        '''turn cars from the lane to other lane (it's a intersection ater all'''
-        if other_lane is None:
-            return
-
-        for index, car in enumerate(self.vehicles):
-            if car.travelled >= params[0] and car.travelled <= params[1]:
-                # get index for car on lane it will turn into
-                i = other_lane.find_index(params[2])
-
-                # if there is a turn on the lane car will turn into get where
-                # it ends
-                dist = 0
-                if self.__turn_exists_at(other_lane):
-                    dist = config.turns[other_lane.number][2]
-                
-                # check if the car can turn: there are no other cars on the lane
-                # OR there is space on the lane :
-                #   all cars are further than the intersection
-                #   OR all cars are closer than the intesection
-                if len(other_lane.vehicles) == 0 or \
-                other_lane.vehicles[i-1].travelled >= params[2] + car.size["length"] or \
-                other_lane.vehicles[i-1].travelled < dist:
-                    speed = car.velocity
-                    self.vehicles.pop(index)
-                    other_lane.add_vehicle(current=speed, travelled=params[2])
-                else:
-                    car.max_velocity = 0
-
-    def __turn_exists_at(self, other_lane):
-        return config.turns[other_lane.number] is not None

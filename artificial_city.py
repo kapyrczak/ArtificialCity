@@ -19,7 +19,7 @@ TRAM_LANES = {
 
 CAR_LANES = {
     1: l.Lane(number=1, length=25, spawn_probability=0),
-    2: l.Lane(number=2, length=25),
+    2: l.Lane(number=2, length=35),
     3: l.Lane(number=3, length=30),
     4: l.Lane(number=4, length=30),
     5: l.Lane(number=5, spawn_probability=0),
@@ -38,6 +38,7 @@ PEDESTRIAN_LANES = {}
 # main loop
 running = True
 while running:
+    counter = 0
     # pygame.time.delay(50)
     clock.tick(config.tps)
 
@@ -57,11 +58,10 @@ while running:
 
     for lane in CAR_LANES.values():
         lane.update()
-        try:
+        if config.turns[lane.number] is not None:
             lane.turn_into(CAR_LANES[config.turns[lane.number][0]],
                            config.turns[lane.number][1:])
-        except TypeError:
-            pass
+        counter += lane.went_through
 
 
     # for lane in PEDESTRIAN_LANES.values():
@@ -71,3 +71,4 @@ while running:
     pygame.display.update()
 
 pygame.quit()
+print('Number of cars that went through the intersection: ' + str(counter))

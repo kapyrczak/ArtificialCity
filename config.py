@@ -1,4 +1,4 @@
-cell_size = 9  # in px
+cell_size = 6  # in px
 screen_size = width, height = 100 * cell_size, 100 * cell_size
 lane_width = 4 * cell_size  # in meters
 
@@ -16,16 +16,16 @@ get self.travelled value that is exactly equal to the `at_length`
 appear_at_travelled is distance on which the car should appear on `lane_into`
 """
 turns = {1: None,
-         2: None,
-         3: [6, 22, 30, 62],
-         4: [11, 22, 30, 58],
+         2: [7, 25, 35, 58],
+         3: [6, 21, 30, 62],
+         4: [11, 21, 30, 58],
          5: None,
-         6: [1, 42, 50, 0],
+         6: [1, 38, 50, 0],
          7: None,
          8: None,
          9: None,
          10: None,
-         11: [5, 40, 45, 0]}
+         11: [5, 38, 45, 0]}
 
 car_lanes = [
     # horizontal lanes -> y
