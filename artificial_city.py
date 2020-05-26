@@ -38,28 +38,20 @@ lights_test = CAR_LANES[6]
 # main loop
 running = True
 while running:
+    counter = 0
     # pygame.time.delay(50)
     clock.tick(config.tps)
 
     for event in pygame.event.get():  # event - wszystko co zrobi użytkownik, np kliknięcie, nacisniecie klawisza itd
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                if lights_test.lit:
-                    CAR_LANES[11].delete_traffic_lights()
-                    lights_test.delete_traffic_lights()
-                else:
-                    # TODO: specify trafic lights distance in config.py
-                    # (for each lane)
-                    CAR_LANES[11].add_traffic_lights(45)
-                    lights_test.add_traffic_lights(50)
 
     for lane in CAR_LANES.values():
         lane.update()
         if config.turns[lane.number] is not None:
             lane.turn_into(CAR_LANES[config.turns[lane.number][0]],
                            config.turns[lane.number][1:])
+        counter += lane.went_through
 
     # for lane in PEDESTRIAN_LANES.values():
     #     lane.update()
@@ -68,3 +60,4 @@ while running:
     pygame.display.update()
 
 pygame.quit()
+print('Number of cars that went through the intersection: ' + str(counter))

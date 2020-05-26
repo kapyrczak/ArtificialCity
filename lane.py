@@ -27,7 +27,15 @@ class Lane:
         self.ticks_per_second = ticks_per_second
         self.v_max = 0
         self.starting_velocity = speed_limit
-        self.lit = False
+
+        if config.traffic_lights[self.number] is not None:
+            self.red_lit = config.traffic_lights[self.number][3]
+
+            if self.red_lit:
+                self.add_traffic_lights(config.traffic_lights[self.number][0])
+            self.green_light_elapsed = 0
+            self.red_light_elapsed = 0
+
         self.went_through = 0
 
     def update(self):
@@ -36,8 +44,7 @@ class Lane:
         self.tick_vehicles()
         self.clean_up()
         self.spawn()
-
-        self.vehicles.sort(key=lambda car: car.travelled)
+        self.update_lights()
 
         v_m = 0
         for car in self.vehicles:
@@ -57,10 +64,8 @@ class Lane:
             prev.calculate_safe_distance()
             prev.keep_safe(curr)
 
-
         for car in self.vehicles:
             car.move()
-
 
     def clean_up(self):
         '''Delete cars that went too far'''
@@ -76,6 +81,7 @@ class Lane:
         '''With set probability spawn new car at the beginning of the lane'''
         if random.random() < self.spawn_probability:
             self.add_vehicle()
+        self.vehicles.sort(key=lambda car: car.travelled)
 
     def add_vehicle(self, length=4, width=2,
                     v_change=config.car_v_change, current=-1,
@@ -110,6 +116,51 @@ class Lane:
             index += 1
         return index
 
+    def update_lights(self):
+        '''Update traffic lights on this lane'''
+        if config.traffic_lights[self.number] is None:
+            return
+
+        if self.red_lit:
+            self.red_light_elapsed += 1
+        else:
+            self.green_light_elapsed += 1
+        self.change_lights()
+
+    def change_lights(self):
+        '''Change the traffic lights if suitable time has passed'''
+        distance = config.traffic_lights[self.number][0]
+        green_lit_time = config.traffic_lights[self.number][1] * self.ticks_per_second
+        red_lit_time = config.traffic_lights[self.number][2] * self.ticks_per_second
+
+        if self.green_light_elapsed >= green_lit_time:
+            self.add_traffic_lights(distance)
+        if self.red_light_elapsed >= red_lit_time:
+            self.delete_traffic_lights()
+
+    def add_traffic_lights(self, distance):
+        '''Add traffic lights that are `distance` away from the beggining of
+        the lane'''
+        if not self.red_lit:
+            return
+
+        index = self.find_index(distance)
+        traffic_lights = vehicle.Vehicle(1, 2, 0, 0, 0, 0, distance, 0, 0)
+        self.vehicles.insert(index, traffic_lights)
+        self.red_lit = True
+        self.red_light_elapsed = 0
+
+    def delete_traffic_lights(self):
+        '''Delete traffic lights from the lane'''
+        if self.red_lit:
+            return
+
+        for index, veh in enumerate(self.vehicles):
+            if veh.max_velocity == 0:
+                self.vehicles.pop(index)
+        self.red_lit = False
+        self.green_light_elapsed = 0
+
     def turn_into(self, other_lane, params):
         '''Turn into other lane at a place described in params'''
         turn_at = params[0]
@@ -133,24 +184,3 @@ class Lane:
             other_lane.vehicles.sort(key=lambda car: car.travelled)
         else:
             car.max_velocity = 0
-
-    def add_traffic_lights(self, distance):
-        '''Add traffic lights that are `distance` away from the beggining of
-        the lane'''
-        if self.lit:
-            return
-
-        index = self.find_index(distance)
-        traffic_lights = vehicle.Vehicle(1, 2, 0, 0, 0, 0, distance, 0, 0)
-        self.vehicles.insert(index, traffic_lights)
-        self.lit = True
-
-    def delete_traffic_lights(self):
-        '''Delete traffic lights from the lane'''
-        if not self.lit:
-            return
-
-        for index, veh in enumerate(self.vehicles):
-            if veh.max_velocity == 0:
-                self.vehicles.pop(index)
-        self.lit = False
