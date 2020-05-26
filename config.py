@@ -1,5 +1,4 @@
-
-cell_size = 6  # in px
+cell_size = 9  # in px
 screen_size = width, height = 100 * cell_size, 100 * cell_size
 lane_width = 4 * cell_size  # in meters
 
@@ -10,7 +9,8 @@ car_slow_prob = 0.45
 car_v_change = 1
 car_slow_duration = 2
 
-"""dictionary: 
+"""
+dictionary: 
 {lane_from_number: [lane_into, at_length, untill_length, appear_at_travelled]}
 untill length is necesarry because it is not very probable that a car will
 get self.travelled value that is exactly equal to the `at_length`
@@ -26,7 +26,26 @@ turns = {1: None,
          8: None,
          9: None,
          10: None,
-         11: [5, 38, 45, 0]}
+         11: [5, 38, 45, 0]
+         }
+
+"""
+dictionary:
+{lane_number: [distance_from_beggining, green_lit_time, red_lit_time, starting_green?]}
+Times in SECONDS
+"""
+traffic_lights = {1: None, # horizontal, turn-into west
+                  2: [18, 4, 5, True], # horizontal, east
+                  3: [18, 4, 5, True],    
+                  4: [18, 4, 5, True], # horizontal, west
+                  5: None, # vertical, turn-into east
+                  6: [35, 4, 5, False], # vertical, south
+                  7: [35, 4, 5, False],
+                  8: [35, 4, 5, False],
+                  9: [35, 4, 5, False], # vertical, north
+                  10: [35, 4, 5, False],
+                  11: [35, 4, 5, False]
+                  }
 
 '''
 dictionaries:
