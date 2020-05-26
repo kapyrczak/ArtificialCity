@@ -31,9 +31,9 @@ CAR_LANES = {
     11: l.Lane(number=11)
 }
 
-lights_test = CAR_LANES[6]
-
 PEDESTRIAN_LANES = {}
+
+lights_test = CAR_LANES[6]
 
 # main loop
 running = True
@@ -62,7 +62,6 @@ while running:
             lane.turn_into(CAR_LANES[config.turns[lane.number][0]],
                            config.turns[lane.number][1:])
         counter += lane.went_through
-
 
     # for lane in PEDESTRIAN_LANES.values():
     #     lane.update()
