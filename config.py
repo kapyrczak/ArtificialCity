@@ -1,4 +1,4 @@
-cell_size = 9  # in px
+cell_size = 6  # in px
 screen_size = width, height = 100 * cell_size, 100 * cell_size
 lane_width = 4 * cell_size  # in meters
 
@@ -31,7 +31,7 @@ turns = {1: None,
 
 """
 dictionary:
-{lane_number: [distance_from_beggining, green_lit_time, red_lit_time, starting_green?]}
+{lane_number: [distance_from_beggining, green_lit_time, red_lit_time, starting_red?]}
 Times in SECONDS
 """
 traffic_lights = {1: None, # horizontal, turn-into west

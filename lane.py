@@ -32,9 +32,12 @@ class Lane:
             self.red_lit = config.traffic_lights[self.number][3]
 
             if self.red_lit:
+                self.red_lit = False # change it to false to allow adding the traffic lights
                 self.add_traffic_lights(config.traffic_lights[self.number][0])
+
             self.green_light_elapsed = 0
             self.red_light_elapsed = 0
+            self.yellow_lit = 0
 
         self.went_through = 0
 
@@ -133,6 +136,9 @@ class Lane:
         green_lit_time = config.traffic_lights[self.number][1] * self.ticks_per_second
         red_lit_time = config.traffic_lights[self.number][2] * self.ticks_per_second
 
+        if self.green_light_elapsed >= green_lit_time - 1*self.ticks_per_second or \
+        self.red_light_elapsed >= red_lit_time - 1*self.ticks_per_second:
+            self.yellow_lit = True
         if self.green_light_elapsed >= green_lit_time:
             self.add_traffic_lights(distance)
         if self.red_light_elapsed >= red_lit_time:
@@ -141,24 +147,26 @@ class Lane:
     def add_traffic_lights(self, distance):
         '''Add traffic lights that are `distance` away from the beggining of
         the lane'''
-        if not self.red_lit:
+        if self.red_lit:
             return
 
         index = self.find_index(distance)
         traffic_lights = vehicle.Vehicle(1, 2, 0, 0, 0, 0, distance, 0, 0)
         self.vehicles.insert(index, traffic_lights)
         self.red_lit = True
+        self.yellow_lit = False
         self.red_light_elapsed = 0
 
     def delete_traffic_lights(self):
         '''Delete traffic lights from the lane'''
-        if self.red_lit:
+        if not self.red_lit:
             return
 
         for index, veh in enumerate(self.vehicles):
             if veh.max_velocity == 0:
                 self.vehicles.pop(index)
         self.red_lit = False
+        self.yellow_lit = False
         self.green_light_elapsed = 0
 
     def turn_into(self, other_lane, params):
