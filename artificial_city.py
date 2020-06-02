@@ -38,7 +38,6 @@ black = (0, 0, 0)
 blue = (152, 203, 222, 255)
 white = (255, 255, 255)
 
-
 def increase_fps():
     global fps
     fps = fps + 10
@@ -50,7 +49,6 @@ def decrease_fps():
 def text_objects(text, font):
     textSurface = font.render(text, True, black)
     return textSurface, textSurface.get_rect()
-
 
 def button(msg, x, y, width, height, color, onhover_color, action=None):
     mouse = pygame.mouse.get_pos()
