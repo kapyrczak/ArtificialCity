@@ -29,6 +29,7 @@ class Lane:
         self.starting_velocity = speed_limit
 
         if config.traffic_lights[self.number] is not None:
+            self.yellow_lit = False
             self.red_lit = config.traffic_lights[self.number][3]
 
             if self.red_lit:
@@ -136,8 +137,7 @@ class Lane:
         green_lit_time = config.traffic_lights[self.number][1] * self.ticks_per_second
         red_lit_time = config.traffic_lights[self.number][2] * self.ticks_per_second
 
-        if self.green_light_elapsed >= green_lit_time - 1*self.ticks_per_second or \
-        self.red_light_elapsed >= red_lit_time - 1*self.ticks_per_second:
+        if self.green_light_elapsed >= green_lit_time - 75 or self.red_light_elapsed >= red_lit_time - 75:
             self.yellow_lit = True
         if self.green_light_elapsed >= green_lit_time:
             self.add_traffic_lights(distance)
@@ -147,6 +147,8 @@ class Lane:
     def add_traffic_lights(self, distance):
         '''Add traffic lights that are `distance` away from the beggining of
         the lane'''
+        self.yellow_lit = False
+
         if self.red_lit:
             return
 
@@ -159,6 +161,8 @@ class Lane:
 
     def delete_traffic_lights(self):
         '''Delete traffic lights from the lane'''
+        self.yellow_lit = False
+
         if not self.red_lit:
             return
 
