@@ -49,6 +49,9 @@ class Vehicle:
         if self.velocity < self.max_velocity:
             self.velocity += self.velocity_change
         self.velocity = min(self.velocity, self.max_velocity)
+        # a guard for traffic lights as they are hacky -
+        # vehicles with max velocity and velocity change < 0
+        self.velocity = max(self.velocity, 0)
 
     def keep_safe(self, vehicle_ahead):
         '''Slow down to not crash into other vehicle'''
@@ -63,12 +66,10 @@ class Vehicle:
         '''with set probability slow down by 1 step'''
         rnd = random.random()
         if self.slow_left > 0:
-            self.slow_left = self.slow_duration
-            self.slow_down()
-        elif rnd < 1 - self.slowdown_probability:
-            return
-        else:
             self.slow_left -= 1
+            self.slow_down()
+        elif rnd <= self.slowdown_probability:
+            self.slow_left -= self.slow_duration
             self.slow_down()
 
     def slow_down(self):

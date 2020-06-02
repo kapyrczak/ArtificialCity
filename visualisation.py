@@ -70,35 +70,35 @@ class Visualisation():
     def drawCarOnLane(self, lane_number, cars):
         if lane_number == 4:
             for car in cars:
-                if car.max_velocity != 0 and car.velocity_change != 0:
+                if car.max_velocity >= 0 and car.velocity_change >= 0:
                     self.drawCar(self.width - car.travelled * self.px - 4 * self.px,
                              self.carlane_c.get(lane_number) + 0.25 * self.lane, 'h', car.size.get("length"),
                              car.size.get("width"))
         elif lane_number == 1:
             for car in cars:
-                if car.max_velocity != 0 and car.velocity_change != 0:
+                if car.max_velocity >= 0 and car.velocity_change >= 0:
                     self.drawCar((self.width - self.lane * 6 - 26 * self.px) / 2 - 4 * self.px - car.travelled * self.px,
                              self.carlane_c.get(lane_number) + 0.25 * self.lane, 'h', car.size.get("length"),
                              car.size.get("width"))
         elif lane_number == 5:
             for car in cars:
-                if car.max_velocity != 0 and car.velocity_change != 0:
+                if car.max_velocity >= 0 and car.velocity_change >= 0:
                     self.drawCar((self.width - self.lane * 6 - 26 * self.px) / 2 + 6 * self.lane + 26 * self.px + car.travelled * self.px,
                              self.carlane_c.get(lane_number) + 0.25 * self.lane, 'h', car.size.get("length"),
                              car.size.get("width"))
         elif lane_number in [2, 3]:
             for car in cars:
-                if car.max_velocity != 0 and car.velocity_change != 0:
+                if car.max_velocity >= 0 and car.velocity_change >= 0:
                     self.drawCar(car.travelled * self.px, self.carlane_c.get(lane_number) + 0.25 * self.lane, 'h',
                              car.size.get("length"), car.size.get("width"))
         elif lane_number in [6, 7, 8]:
             for car in cars:
-                if car.max_velocity != 0 and car.velocity_change != 0:
+                if car.max_velocity >= 0 and car.velocity_change >= 0:
                     self.drawCar(self.carlane_c.get(lane_number) + 0.25 * self.lane, car.travelled * self.px, 'v',
                              car.size.get("length"), car.size.get("width"))
         elif lane_number in [9, 10, 11]:
             for car in cars:
-                if car.max_velocity != 0 and car.velocity_change != 0:
+                if car.max_velocity >= 0 and car.velocity_change >= 0:
                     self.drawCar(self.carlane_c.get(lane_number) + 0.25 * self.lane,
                              self.height - car.travelled * self.px - 4 * self.px, 'v', car.size.get("length"),
                              car.size.get("width"))
