@@ -89,10 +89,11 @@ class Lane:
 
     def add_vehicle(self, length=4, width=2,
                     v_change=config.car_v_change, current=-1,
-                    slowdown_probability=config.car_slow_prob,
                     travelled=0, slow_duration=config.car_slow_duration):
         '''Add a new vehicle to the lane'''
         index = self.find_index(travelled)
+
+        slowdown_probability=config.car_slow_prob
 
         if len(self.vehicles) != 0 and \
             self.vehicles[index-1].travelled - self.vehicles[index-1].size["length"] <= \
@@ -153,7 +154,7 @@ class Lane:
             return
 
         index = self.find_index(distance)
-        traffic_lights = vehicle.Vehicle(1, 2, 0, 0, 0, 0, distance, 0, 0)
+        traffic_lights = vehicle.Vehicle(1, 2, -10, -10, 0, 0, distance, 0, 0)
         self.vehicles.insert(index, traffic_lights)
         self.red_lit = True
         self.yellow_lit = False
@@ -167,7 +168,7 @@ class Lane:
             return
 
         for index, veh in enumerate(self.vehicles):
-            if veh.max_velocity == 0:
+            if veh.max_velocity < 0:
                 self.vehicles.pop(index)
         self.red_lit = False
         self.yellow_lit = False
