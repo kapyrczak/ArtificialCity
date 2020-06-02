@@ -2,7 +2,8 @@ cell_size = 9  # in px
 screen_size = width, height = 100 * cell_size, 100 * cell_size
 lane_width = 4 * cell_size  # in meters
 
-tps = 100
+tps = 100 # used to simulate cars
+fps = 100 # used in visualization
 car_speed_limit = 50
 car_spawn_prob = 0.1
 car_slow_prob = 0.45
@@ -31,7 +32,7 @@ turns = {1: None,
 
 """
 dictionary:
-{lane_number: [distance_from_beggining, green_lit_time, red_lit_time, starting_green?]}
+{lane_number: [distance_from_beggining, green_lit_time, red_lit_time, starting_red?]}
 Times in SECONDS
 """
 traffic_lights = {1: None, # horizontal, turn-into west
