@@ -56,6 +56,7 @@ shorter_v = Button("SKRÓĆ PIONOWE ŚWIATŁA", config.width / 2 - 100, 70 * con
 prob_up = Button("ZWIĘKSZ PRAW. ZWALNIANIA", config.width / 2 - 100, 80 * config.cell_size, 200, 50, white, blue, lambda: increase_slowdown_prob(CAR_LANES))
 prob_down = Button("ZMNIEJSZ PRAW. ZWALNIANIA", config.width / 2 - 100, 90 * config.cell_size, 200, 50, white, blue, lambda: decrease_slowdown_prob(CAR_LANES))
 
+
 start_time = time.time()
 
 # main loop
