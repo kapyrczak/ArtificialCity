@@ -93,7 +93,7 @@ class Lane:
         '''Add a new vehicle to the lane'''
         index = self.find_index(travelled)
 
-        slowdown_probability=config.car_slow_prob
+        slowdown_probability = config.car_slow_prob
 
         if len(self.vehicles) != 0 and \
             self.vehicles[index-1].travelled - self.vehicles[index-1].size["length"] <= \
