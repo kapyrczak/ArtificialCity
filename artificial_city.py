@@ -4,6 +4,7 @@ import lane as l
 import config
 from visualisation import Visualisation
 from button_functions import *
+from button import Button
 
 pygame.init()
 win = pygame.display.set_mode(config.screen_size)
@@ -40,28 +41,14 @@ black = (0, 0, 0)
 blue = (152, 203, 222, 255)
 white = (255, 255, 255)
 
-
-def text_objects(text, font):
-    textSurface = font.render(text, True, black)
-    return textSurface, textSurface.get_rect()
-
-
-def button(msg, x, y, width, height, color, onhover_color, action=None):
-    mouse = pygame.mouse.get_pos()
-    click = pygame.mouse.get_pressed()
-
-    if x + width > mouse[0] > x and y + height > mouse[1] > y:
-        pygame.draw.rect(win, onhover_color, (x, y, width, height))
-
-        if click[0] == 1 and action != None:
-            action()
-    else:
-        pygame.draw.rect(win, color, (x, y, width, height))
-
-    smallText = pygame.font.SysFont("comicsansms", 20)
-    textSurf, textRect = text_objects(msg, smallText)
-    textRect.center = ((x + (width / 2)), (y + (height / 2)))
-    win.blit(textSurf, textRect)
+faster = Button("PRZYŚPIESZ SYMULACJĘ", config.width / 2 - 100, 4 * config.cell_size, 200, 50, white, blue, increase_fps)
+slower = Button("SPOWOLNIJ SYMULACJĘ", config.width / 2 - 100, 14 * config.cell_size, 200, 50, white, blue, decrease_fps)
+longer_h = Button("WYDŁUŻ POZIOME ŚWIATŁA", config.width / 2 - 100, 24 * config.cell_size, 200, 50, white, blue, increase_green_light_time_horizontal)
+shorter_h = Button("SKRÓĆ POZIOME ŚWIATŁA", config.width / 2 - 100, 34 * config.cell_size, 200, 50, white, blue, decrease_green_light_time_horizontal)
+longer_v = Button("WYDŁUŻ PIONOWE ŚWIATŁA", config.width / 2 - 100, 60 * config.cell_size, 200, 50, white, blue, increase_green_light_time_vertical)
+shorter_v = Button("SKRÓĆ PIONOWE ŚWIATŁA", config.width / 2 - 100, 70 * config.cell_size, 200, 50, white, blue, decrease_green_light_time_vertical)
+prob_up = Button("ZWIĘKSZ PRAW. ZWALNIANIA", config.width / 2 - 100, 80 * config.cell_size, 200, 50, white, blue, lambda: increase_slowdown_prob(CAR_LANES))
+prob_down = Button("ZMNIEJSZ PRAW. ZWALNIANIA", config.width / 2 - 100, 90 * config.cell_size, 200, 50, white, blue, lambda: decrease_slowdown_prob(CAR_LANES))
 
 start_time = time.time()
 
@@ -85,14 +72,14 @@ while running:
     #     lane.update()
 
     visualisation.draw(CAR_LANES, PEDESTRIAN_LANES, TRAM_LANES)
-    button("PRZYŚPIESZ SYMULACJĘ", config.width / 2 - 100, 4 * config.cell_size, 200, 50, white, blue, increase_fps)
-    button("SPOWOLNIJ SYMULACJĘ", config.width / 2 - 100, 14 * config.cell_size, 200, 50, white, blue, decrease_fps)
-    button("WYDŁUŻ POZIOME ŚWIATŁA", config.width / 2 - 100, 24 * config.cell_size, 200, 50, white, blue, increase_green_light_time_horizontal)
-    button("SKRÓĆ POZIOME ŚWIATŁA", config.width / 2 - 100, 34 * config.cell_size, 200, 50, white, blue, decrease_green_light_time_horizontal)
-    button("WYDŁUŻ PIONOWE ŚWIATŁA", config.width / 2 - 100, 60 * config.cell_size, 200, 50, white, blue, increase_green_light_time_vertical)
-    button("SKRÓĆ PIONOWE ŚWIATŁA", config.width / 2 - 100, 70 * config.cell_size, 200, 50, white, blue, decrease_green_light_time_vertical)
-    button("ZWIĘKSZ PRAW. ZWALNIANIA", config.width / 2 - 100, 80 * config.cell_size, 200, 50, white, blue, lambda: increase_slowdown_prob(CAR_LANES))
-    button("ZMNIEJSZ PRAW. ZWALNIANIA", config.width / 2 - 100, 90 * config.cell_size, 200, 50, white, blue, lambda: decrease_slowdown_prob(CAR_LANES))
+    faster.draw(win)
+    slower.draw(win)
+    longer_h.draw(win)
+    shorter_h.draw(win)
+    longer_v.draw(win)
+    shorter_v.draw(win)
+    prob_up.draw(win)
+    prob_down.draw(win)
 
     pygame.display.update()
 
