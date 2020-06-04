@@ -9,6 +9,10 @@ Created on Tue Jun  2 20:24:25 2020
 import config
 
 
+def switch_simulation(flag):
+    flag[0] = not flag[0]
+    print("Simulation running: " + str(flag[0]))
+
 def increase_fps():
     old = config.fps
 

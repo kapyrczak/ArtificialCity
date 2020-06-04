@@ -41,6 +41,12 @@ black = (0, 0, 0)
 blue = (152, 203, 222, 255)
 white = (255, 255, 255)
 
+# a workaround so the value referenced here can be changed in a function elsewhere
+running = [False]
+
+on = True
+
+on_off = Button("URUCHOM/ZATRZYMAJ", 0, 0, 200, 50, white, blue, lambda: switch_simulation(running))
 faster = Button("PRZYŚPIESZ SYMULACJĘ", config.width / 2 - 100, 4 * config.cell_size, 200, 50, white, blue, increase_fps)
 slower = Button("SPOWOLNIJ SYMULACJĘ", config.width / 2 - 100, 14 * config.cell_size, 200, 50, white, blue, decrease_fps)
 longer_h = Button("WYDŁUŻ POZIOME ŚWIATŁA", config.width / 2 - 100, 24 * config.cell_size, 200, 50, white, blue, increase_green_light_time_horizontal)
@@ -53,25 +59,31 @@ prob_down = Button("ZMNIEJSZ PRAW. ZWALNIANIA", config.width / 2 - 100, 90 * con
 start_time = time.time()
 
 # main loop
-running = True
-while running:
+while on:
     # pygame.time.delay(50)
     clock.tick(config.fps)
 
     for event in pygame.event.get():  # event - wszystko co zrobi użytkownik, np kliknięcie, nacisniecie klawisza itd
         if event.type == pygame.QUIT:
-            running = False
+            on = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                running[0] = not running[0]
+                print("Simulation running: " + str(running[0]))
 
-    for lane in CAR_LANES.values():
-        lane.update()
-        if config.turns[lane.number] is not None:
-            lane.turn_into(CAR_LANES[config.turns[lane.number][0]],
-                           config.turns[lane.number][1:])
-
-    # for lane in PEDESTRIAN_LANES.values():
-    #     lane.update()
-
+    if running[0]:
+        for lane in CAR_LANES.values():
+            lane.update()
+            if config.turns[lane.number] is not None:
+                lane.turn_into(CAR_LANES[config.turns[lane.number][0]],
+                               config.turns[lane.number][1:])
+    
+        # for lane in PEDESTRIAN_LANES.values():
+        #     lane.update()
+    
     visualisation.draw(CAR_LANES, PEDESTRIAN_LANES, TRAM_LANES)
+
+    on_off.draw(win)
     faster.draw(win)
     slower.draw(win)
     longer_h.draw(win)
