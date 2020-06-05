@@ -8,6 +8,9 @@ Created on Tue Jun  2 20:24:25 2020
 
 import config
 
+def switch_simulation(flag):
+    flag[0] = not flag[0]
+    print("Simulation running: " + str(flag[0]))
 
 def increase_fps():
     old = config.fps
@@ -68,9 +71,9 @@ def decrease_green_light_time_horizontal():
     old = config.traffic_lights[h_lane_numbers[0]][1]
 
     for lane_number in h_lane_numbers:
-        config.traffic_lights[lane_number][1] = max(config.traffic_lights[lane_number][1] - 0.5, 0)
+        config.traffic_lights[lane_number][1] = max(config.traffic_lights[lane_number][1] - 0.5, 0.5)
     for lane_number in v_lane_numbers:
-        config.traffic_lights[lane_number][2] = max(config.traffic_lights[lane_number][2] - 0.5, 0)
+        config.traffic_lights[lane_number][2] = max(config.traffic_lights[lane_number][2] - 0.5, 0.5)
 
     if old != config.traffic_lights[h_lane_numbers[0]][1]:
         print("Current green light time for HORIZONTAL lanes: %.2f s." % config.traffic_lights[h_lane_numbers[0]][1])
@@ -94,9 +97,9 @@ def decrease_green_light_time_vertical():
     old = config.traffic_lights[v_lane_numbers[0]][1]
 
     for lane_number in v_lane_numbers:
-        config.traffic_lights[lane_number][1] = max(config.traffic_lights[lane_number][1] - 0.5, 0)
+        config.traffic_lights[lane_number][1] = max(config.traffic_lights[lane_number][1] - 0.5, 0.5)
     for lane_number in h_lane_numbers:
-        config.traffic_lights[lane_number][2] = max(config.traffic_lights[lane_number][2] - 0.5, 0)
+        config.traffic_lights[lane_number][2] = max(config.traffic_lights[lane_number][2] - 0.5, 0.5)
 
     if old != config.traffic_lights[v_lane_numbers[0]][1]:
         print("Current green light time for VERTICAL lanes: %.2f s." % config.traffic_lights[v_lane_numbers[0]][1])
