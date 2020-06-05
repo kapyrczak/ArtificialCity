@@ -107,21 +107,23 @@ class Visualisation():
     def drawTramOnLane(self, lane_number, cars):
         if lane_number == 1:
             for car in cars:
-                self.drawCar(self.width - car.travelled * self.px - 4 * self.px,
-                             self.tramlane_c.get(lane_number) + 0.25 * self.lane, 'h', car.size.get("length"),
-                             car.size.get("width"))
+                if car.max_velocity >= 0 and car.velocity_change >= 0:
+                    self.drawCar(self.width - car.travelled * self.px - 4 * self.px,
+                                 self.tramlane_c.get(lane_number) + 0.25 * self.lane, 'h', car.size.get("length"),
+                                 car.size.get("width"), darkblue)
         else:
             for car in cars:
-                self.drawCar(car.travelled * self.px, self.tramlane_c.get(lane_number) + 0.25 * self.lane, 'h',
-                             car.size.get("length"), car.size.get("width"))
+                if car.max_velocity >= 0 and car.velocity_change >= 0:
+                    self.drawCar(car.travelled * self.px, self.tramlane_c.get(lane_number) + 0.25 * self.lane, 'h',
+                                 car.size.get("length"), car.size.get("width"), darkblue)
 
     'method used for drawing a single car'
-    def drawCar(self, x, y, dir, length, width):
+    def drawCar(self, x, y, dir, length, width, color=black):
         if dir == 'h':
             car = pygame.Surface((length * self.px, width * self.px), pygame.SRCALPHA)
         else:
             car = pygame.Surface((width * self.px, length * self.px), pygame.SRCALPHA)
-        car.fill(black)
+        car.fill(color)
         self.win.blit(car, (x, y))
 
     'method used for drawing a single pedestrian'
@@ -269,4 +271,4 @@ class Visualisation():
         pygame.draw.line(self.win, darkgrey, (0, self.carlane_c.get(3)),
                          (self.carlane_c.get(6) + self.lane, self.carlane_c.get(3)), 1)
 
-        # self.drawGrid()
+#        self.drawGrid()
