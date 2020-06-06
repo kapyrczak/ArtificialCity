@@ -25,7 +25,7 @@ class Visualisation():
     def draw(self, CAR_LANES, PEDESTRIAN_LANES, TRAM_LANES):
         self.win.fill(darkgreen)
         self.__drawIntersection()
-        self.drawLights(CAR_LANES)
+        self.drawLights(CAR_LANES, TRAM_LANES)
         self.__drawLines()
         self.drawVehicles(CAR_LANES, PEDESTRIAN_LANES, TRAM_LANES)
 
@@ -140,7 +140,7 @@ class Visualisation():
                 pygame.draw.rect(self.win, black, rect, 1)
 
     'method used for drawing traffic lights'
-    def drawLights(self, CAR_LANES):
+    def drawLights(self, CAR_LANES, TRAM_LANES):
         vertical = pygame.Surface((0.5 * self.px, self.lane), pygame.SRCALPHA)
         horizontal = pygame.Surface((self.lane, 0.5 * self.px), pygame.SRCALPHA)
 
@@ -180,11 +180,17 @@ class Visualisation():
                 self.win.blit(horizontal, (self.carlane_c.get(key), self.carlane_c.get(3) + 0.75 * self.px))
 
         # tram lanes
-        vertical.fill(red)
-        self.win.blit(vertical, (self.carlane_c.get(8) + self.lane + self.px, self.carlane_c.get(1) + self.lane))
-        self.win.blit(vertical, (self.carlane_c.get(11) + self.lane + 0.75 * self.px, self.carlane_c.get(1) + self.lane))
-        self.win.blit(vertical, (self.carlane_c.get(6) - self.px, self.carlane_c.get(1) + self.lane * 2))
-        self.win.blit(vertical, (self.carlane_c.get(9) - self.px, self.carlane_c.get(1) + self.lane * 2))
+        for key, lane in TRAM_LANES.items():
+            if lane.yellow_lit:
+                vertical.fill(yellow)
+            elif lane.red_lit:
+                vertical.fill(red)
+            else:
+                vertical.fill(green)
+            self.win.blit(vertical, (self.carlane_c.get(8) + self.lane + self.px, self.carlane_c.get(1) + self.lane))
+            self.win.blit(vertical, (self.carlane_c.get(11) + self.lane + 0.75 * self.px, self.carlane_c.get(1) + self.lane))
+            self.win.blit(vertical, (self.carlane_c.get(6) - self.px, self.carlane_c.get(1) + self.lane * 2))
+            self.win.blit(vertical, (self.carlane_c.get(9) - self.px, self.carlane_c.get(1) + self.lane * 2))
 
     'method used for drawing the intersection'
     def __drawIntersection(self):
