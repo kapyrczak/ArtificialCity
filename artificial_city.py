@@ -15,8 +15,8 @@ visualisation = Visualisation(win, config.lane_width, config.cell_size, config.c
                               config.z_lanes_coordinates, config.t_lanes_coordinates)
 
 TRAM_LANES = {
-    1: l.Lane(),
-    2: l.Lane()
+    1: l.TramLane(number=1),
+    2: l.TramLane(number=2)
 }
 
 CAR_LANES = {
@@ -78,6 +78,8 @@ while on:
             if config.turns[lane.number] is not None:
                 lane.turn_into(CAR_LANES[config.turns[lane.number][0]],
                                config.turns[lane.number][1:])
+        for lane in TRAM_LANES.values():
+            lane.update()
     
         # for lane in PEDESTRIAN_LANES.values():
         #     lane.update()
@@ -101,10 +103,18 @@ pygame.quit()
 end_time = time.time()
 elapsed_time = end_time - start_time
 
-counter = 0
+car_counter = 0
 for lane in CAR_LANES.values():
-    counter += lane.went_through
+    car_counter += lane.went_through
+
+tram_counter = 0
+for lane in TRAM_LANES.values():
+    tram_counter += lane.went_through
+
 print("-------------------------------------------------------------")
-print('Number of cars that went through the intersection: ' + str(counter))
 print("Simulation duration: %.3f" % elapsed_time)
-print("Average number of cars exiting the intersection per second: %.3f" % (counter / elapsed_time))
+print('Number of cars that went through the intersection: ' + str(car_counter))
+print("Average number of cars exiting the intersection per second: %.3f" % (car_counter / elapsed_time))
+print("Number of trams that went through the intersection: " + str(tram_counter))
+print("Average number of trams exiting the intersection per second: %.3f" % (tram_counter / elapsed_time))
+
