@@ -91,35 +91,35 @@ class Visualisation():
             for car in cars:
                 if car.max_velocity >= 0 and car.velocity_change >= 0:
                     self.drawCar(self.width - car.travelled * self.px - 4 * self.px,
-                             self.carlane_c.get(lane_number) + 0.25 * self.lane, 'h', car.size.get("length"),
+                             self.carlane_c.get(lane_number) + 0.25 * self.lane, 'hl', car.size.get("length"),
                              car.size.get("width"))
         elif lane_number == 1:
             for car in cars:
                 if car.max_velocity >= 0 and car.velocity_change >= 0:
                     self.drawCar((self.width - self.lane * 6 - 26 * self.px) / 2 - 4 * self.px - car.travelled * self.px,
-                             self.carlane_c.get(lane_number) + 0.25 * self.lane, 'h', car.size.get("length"),
+                             self.carlane_c.get(lane_number) + 0.25 * self.lane, 'hl', car.size.get("length"),
                              car.size.get("width"))
         elif lane_number == 5:
             for car in cars:
                 if car.max_velocity >= 0 and car.velocity_change >= 0:
                     self.drawCar((self.width - self.lane * 6 - 26 * self.px) / 2 + 6 * self.lane + 26 * self.px + car.travelled * self.px,
-                             self.carlane_c.get(lane_number) + 0.25 * self.lane, 'h', car.size.get("length"),
+                             self.carlane_c.get(lane_number) + 0.25 * self.lane, 'hr', car.size.get("length"),
                              car.size.get("width"))
         elif lane_number in [2, 3]:
             for car in cars:
                 if car.max_velocity >= 0 and car.velocity_change >= 0:
-                    self.drawCar(car.travelled * self.px, self.carlane_c.get(lane_number) + 0.25 * self.lane, 'h',
+                    self.drawCar(car.travelled * self.px, self.carlane_c.get(lane_number) + 0.25 * self.lane, 'hr',
                              car.size.get("length"), car.size.get("width"))
         elif lane_number in [6, 7, 8]:
             for car in cars:
                 if car.max_velocity >= 0 and car.velocity_change >= 0:
-                    self.drawCar(self.carlane_c.get(lane_number) + 0.25 * self.lane, car.travelled * self.px, 'v',
+                    self.drawCar(self.carlane_c.get(lane_number) + 0.25 * self.lane, car.travelled * self.px, 'vd',
                              car.size.get("length"), car.size.get("width"))
         elif lane_number in [9, 10, 11]:
             for car in cars:
                 if car.max_velocity >= 0 and car.velocity_change >= 0:
                     self.drawCar(self.carlane_c.get(lane_number) + 0.25 * self.lane,
-                             self.height - car.travelled * self.px - 4 * self.px, 'v', car.size.get("length"),
+                             self.height - car.travelled * self.px - 4 * self.px, 'vt', car.size.get("length"),
                              car.size.get("width"))
 
     'method used for drawing trams on their new position on every lane'
@@ -128,21 +128,31 @@ class Visualisation():
             for tram in trams:
                 if tram.max_velocity >= 0 and tram.velocity_change >= 0:
                     self.drawCar(self.width - tram.travelled * self.px - 4 * self.px,
-                                 self.tramlane_c.get(lane_number) + 0.25 * self.lane, 'h', tram.size.get("length"),
+                                 self.tramlane_c.get(lane_number) + 0.25 * self.lane, 'tl', tram.size.get("length"),
                                  tram.size.get("width"), darkblue)
         else:
             for tram in trams:
                 if tram.max_velocity >= 0 and tram.velocity_change >= 0:
-                    self.drawCar(tram.travelled * self.px, self.tramlane_c.get(lane_number) + 0.25 * self.lane, 'h',
+                    self.drawCar(tram.travelled * self.px, self.tramlane_c.get(lane_number) + 0.25 * self.lane, 'tr',
                                  tram.size.get("length"), tram.size.get("width"), darkblue)
 
     'method used for drawing a single car'
     def drawCar(self, x, y, dir, length, width, color=black):
-        if dir == 'h':
-            car = pygame.Surface((length * self.px, width * self.px), pygame.SRCALPHA)
+        if dir == 'hr':
+            #car = pygame.Surface((length * self.px, width * self.px), pygame.SRCALPHA)
+            car = pygame.image.load('poziomewprawo.png')
+        elif dir == 'hl':
+            car = pygame.image.load('poziome.png')
+        elif dir == 'vd':
+            #car = pygame.Surface((width * self.px, length * self.px), pygame.SRCALPHA)
+            car = pygame.image.load('pionowewdol.png')
+        elif dir == 'vt':
+            car = pygame.image.load('pionowe.png')
+        elif dir == 'tl':
+            car = pygame.image.load('traml.png')
         else:
-            car = pygame.Surface((width * self.px, length * self.px), pygame.SRCALPHA)
-        car.fill(color)
+            car = pygame.image.load('tramr.png')
+        #car.fill(color)
         self.win.blit(car, (x, y))
 
     'method used for drawing a single pedestrian'
