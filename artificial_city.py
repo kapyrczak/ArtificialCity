@@ -33,7 +33,9 @@ CAR_LANES = {
     11: l.Lane(number=11)
 }
 
-PEDESTRIAN_LANES = {}
+PEDESTRIAN_LANES = {
+    # 1: l.Lane(number=1)
+}
 
 lights_test = CAR_LANES[6]
 
@@ -81,8 +83,8 @@ while on:
         for lane in TRAM_LANES.values():
             lane.update()
     
-        # for lane in PEDESTRIAN_LANES.values():
-        #     lane.update()
+        for lane in PEDESTRIAN_LANES.values():
+            lane.update()
     
     visualisation.draw(CAR_LANES, PEDESTRIAN_LANES, TRAM_LANES)
 
