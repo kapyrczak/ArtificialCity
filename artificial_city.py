@@ -73,12 +73,24 @@ while on:
 
     if running[0]:
         for lane in CAR_LANES.values():
-            lane.update()
+            going_through = []
+            for tuple_ in config.car_lanes_going_through[lane.number]['tram']:
+                # the `*` operator unpacks a tuple
+                going_through.append([TRAM_LANES[tuple_[0]], *tuple_[1:]])
+
+            lane.update(going_through)
+
             if config.turns[lane.number] is not None:
                 lane.turn_into(CAR_LANES[config.turns[lane.number][0]],
                                config.turns[lane.number][1:])
+
         for lane in TRAM_LANES.values():
-            lane.update()
+            going_through = []
+            for tuple_ in config.tram_lanes_going_through[lane.number]['car']:
+                # the `*` operator unpacks a tuple
+                going_through.append([CAR_LANES[tuple_[0]], *tuple_[1:]])
+
+            lane.update(going_through)
     
         # for lane in PEDESTRIAN_LANES.values():
         #     lane.update()
