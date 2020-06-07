@@ -36,11 +36,13 @@ class Visualisation():
         for key, lane in TRAM_LANES.items():
             self.drawTramOnLane(key, lane.vehicles)
 
-        # for lane in PEDESTRIAN_LANES:
-        self.drawPedestrianOnLane()
+        for key, lane in PEDESTRIAN_LANES.items():
+            self.drawPedestrianOnLane(key, lane.vehicles)
+
+        self.drawPedestrianOnLane(0, 0) # just to show initial position of pedestrians
 
     'method used for drawing pedestrians on their new position on every lane'
-    def drawPedestrianOnLane(self):
+    def drawPedestrianOnLane(self, lane_number, pedestrians):
         x, y = self.zebralane_c.get(1)
         self.drawPedestrian(x + 0.5 * self.px, y)
         x, y = self.zebralane_c.get(2)
@@ -65,6 +67,23 @@ class Visualisation():
         self.drawPedestrian(x - 0.25 * self.px, y + 0.5 * self.px)
         x, y = self.zebralane_c.get(12)
         self.drawPedestrian(x, y)
+
+        if lane_number in [1, 3]:
+            for pedestrian in pedestrians:
+                x, y = self.zebralane_c.get(lane_number)
+                self.drawPedestrian(x + 0.5 * self.px, y + pedestrian.travelled * self.px)
+        elif lane_number in [2,4]:
+            for pedestrian in pedestrians:
+                x, y = self.zebralane_c.get(lane_number)
+                self.drawPedestrian(x + 0.25 * self.px, y - 0.25 * self.px - pedestrian.travelled * self.px)
+        elif lane_number in [6, 8, 10, 12]:
+            for pedestrian in pedestrians:
+                x, y = self.zebralane_c.get(lane_number)
+                self.drawPedestrian(x + pedestrian.travelled * self.px, y)
+        elif lane_number in [5, 7, 9, 11]:
+            for pedestrian in pedestrians:
+                x, y = self.zebralane_c.get(lane_number)
+                self.drawPedestrian(x - 0.25 * self.px - pedestrian.travelled * self.px, y + 0.5 * self.px)
 
     'method used for drawing cars on their new position on every lane'
     def drawCarOnLane(self, lane_number, cars):
@@ -103,19 +122,19 @@ class Visualisation():
                              self.height - car.travelled * self.px - 4 * self.px, 'v', car.size.get("length"),
                              car.size.get("width"))
 
-    'method used for drawing pedestrians on their new position on every lane'
-    def drawTramOnLane(self, lane_number, cars):
+    'method used for drawing trams on their new position on every lane'
+    def drawTramOnLane(self, lane_number, trams):
         if lane_number == 1:
-            for car in cars:
-                if car.max_velocity >= 0 and car.velocity_change >= 0:
-                    self.drawCar(self.width - car.travelled * self.px - 4 * self.px,
-                                 self.tramlane_c.get(lane_number) + 0.25 * self.lane, 'h', car.size.get("length"),
-                                 car.size.get("width"), darkblue)
+            for tram in trams:
+                if tram.max_velocity >= 0 and tram.velocity_change >= 0:
+                    self.drawCar(self.width - tram.travelled * self.px - 4 * self.px,
+                                 self.tramlane_c.get(lane_number) + 0.25 * self.lane, 'h', tram.size.get("length"),
+                                 tram.size.get("width"), darkblue)
         else:
-            for car in cars:
-                if car.max_velocity >= 0 and car.velocity_change >= 0:
-                    self.drawCar(car.travelled * self.px, self.tramlane_c.get(lane_number) + 0.25 * self.lane, 'h',
-                                 car.size.get("length"), car.size.get("width"), darkblue)
+            for tram in trams:
+                if tram.max_velocity >= 0 and tram.velocity_change >= 0:
+                    self.drawCar(tram.travelled * self.px, self.tramlane_c.get(lane_number) + 0.25 * self.lane, 'h',
+                                 tram.size.get("length"), tram.size.get("width"), darkblue)
 
     'method used for drawing a single car'
     def drawCar(self, x, y, dir, length, width, color=black):
@@ -132,7 +151,7 @@ class Visualisation():
         p.fill(black)
         self.win.blit(p, (x, y))
 
-    'method used for drawing a single car'
+    'method used for drawing a grid'
     def drawGrid(self):
         for x in range(self.width // self.px):
             for y in range(self.width // self.px):
@@ -245,28 +264,28 @@ class Visualisation():
     def __drawLines(self):
         ' lines '
         for i in range(0, 5):
-            pygame.draw.line(self.win, darkgrey, (0, self.carlane_c.get(1) + i * self.lane),
+            pygame.draw.line(self.win, white, (0, self.carlane_c.get(1) + i * self.lane),
                              (self.carlane_c.get(6), self.carlane_c.get(1) + i * self.lane), 1)
-            pygame.draw.line(self.win, darkgrey, ((self.carlane_c.get(6) + 6 * self.lane + 26 * self.px),
+            pygame.draw.line(self.win, white, ((self.carlane_c.get(6) + 6 * self.lane + 26 * self.px),
                                                   ((self.height - self.lane * 4) / 2 + i * self.lane)),
                              (self.width, ((self.height - self.lane * 4) / 2 + i * self.lane)), 1)
 
-        pygame.draw.line(self.win, darkgrey, (0, self.carlane_c.get(1) + 5 * self.lane),
+        pygame.draw.line(self.win, white, (0, self.carlane_c.get(1) + 5 * self.lane),
                          (self.carlane_c.get(6), self.carlane_c.get(1) + 5 * self.lane), 1)
 
         for i in range(0, 3):
-            pygame.draw.line(self.win, darkgrey, (self.carlane_c.get(6) + (i + 1) * self.lane, 0),
+            pygame.draw.line(self.win, white, (self.carlane_c.get(6) + (i + 1) * self.lane, 0),
                              (self.carlane_c.get(6) + (i + 1) * self.lane, self.height), 1)
-            pygame.draw.line(self.win, darkgrey, (self.carlane_c.get(6) + (i + 3) * self.lane + 26 * self.px, 0),
+            pygame.draw.line(self.win, white, (self.carlane_c.get(6) + (i + 3) * self.lane + 26 * self.px, 0),
                              (self.carlane_c.get(6) + (i + 3) * self.lane + 26 * self.px, self.height), 1)
 
-        pygame.draw.line(self.win, darkgrey, (self.carlane_c.get(6), 0), (self.carlane_c.get(6), self.carlane_c.get(1)),
+        pygame.draw.line(self.win, white, (self.carlane_c.get(6), 0), (self.carlane_c.get(6), self.carlane_c.get(1)),
                          1)
-        pygame.draw.line(self.win, darkgrey, (self.carlane_c.get(6) + 6 * self.lane + 26 * self.px, 0),
+        pygame.draw.line(self.win, white, (self.carlane_c.get(6) + 6 * self.lane + 26 * self.px, 0),
                          (self.carlane_c.get(6) + 6 * self.lane + 26 * self.px, self.carlane_c.get(1)), 1)
-        pygame.draw.line(self.win, darkgrey, (self.carlane_c.get(6), self.carlane_c.get(1) + 5 * self.lane),
+        pygame.draw.line(self.win, white, (self.carlane_c.get(6), self.carlane_c.get(1) + 5 * self.lane),
                          (self.carlane_c.get(6), self.height), 1)
-        pygame.draw.line(self.win, darkgrey,
+        pygame.draw.line(self.win, white,
                          (self.carlane_c.get(6) + 6 * self.lane + 26 * self.px, self.carlane_c.get(1) + 4 * self.lane),
                          (self.carlane_c.get(6) + 6 * self.lane + 26 * self.px, self.height), 1)
 
@@ -274,7 +293,7 @@ class Visualisation():
             pygame.draw.line(self.win, darkblue, (0, self.carlane_c.get(1) + i * self.lane),
                              (self.height, self.carlane_c.get(1) + i * self.lane), 1)
 
-        pygame.draw.line(self.win, darkgrey, (0, self.carlane_c.get(3)),
+        pygame.draw.line(self.win, white, (0, self.carlane_c.get(3)),
                          (self.carlane_c.get(6) + self.lane, self.carlane_c.get(3)), 1)
 
 #        self.drawGrid()
