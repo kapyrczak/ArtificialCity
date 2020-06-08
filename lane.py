@@ -47,9 +47,12 @@ class Lane:
             self.red_light_elapsed = 0
             self.yellow_lit = 0
 
-    def update(self):
+    def update(self, through_lanes=None):
         '''Move every car on lane, destroy ones that are out of border,
         spawn new ones'''
+        if through_lanes is not None:
+            self.check_through_lanes(through_lanes)
+
         self.tick_vehicles()
         self.clean_up()
         self.spawn()
@@ -58,6 +61,26 @@ class Lane:
         v_m = 0
         for car in self.vehicles:
             self.v_max = max(v_m, car.velocity)
+
+    def check_through_lanes(self, through_lanes):
+        '''For each car on lane check if other lane (ahead) is busy'''
+        for car in self.vehicles:
+            for through_lane in through_lanes:
+                if car.travelled >= through_lane[-1] - 2 and \
+                car.travelled <= through_lane[-1]:
+                    if self.through_lane_busy(through_lane[:-1]):
+                        car.max_velocity = 0
+                    else:
+                        car.max_velocity = self.speed_limit
+
+    def through_lane_busy(self, through_lane_tuple):
+        '''Check if a set part of another lane is occupied'''
+        through_lane, through_travelled = through_lane_tuple
+        through_index = through_lane.find_index(through_travelled) - 1
+
+        return len(through_lane.vehicles) != 0 and \
+        through_lane.vehicles[through_index].travelled <= through_travelled -1 and \
+        through_lane.vehicles[through_index].travelled >= through_travelled - through_lane.vehicles[through_index].size["length"] - 2
 
     def tick_vehicles(self):
         '''Move every car on lane'''
@@ -153,6 +176,9 @@ class Lane:
             self.add_traffic_lights(distance)
         if self.red_light_elapsed >= red_lit_time:
             self.delete_traffic_lights()
+        
+        #elif self.red_light_elapsed >= red_lit_time - 75:
+         #   self.yellow_lit = True
 
 
     def add_traffic_lights(self, distance):

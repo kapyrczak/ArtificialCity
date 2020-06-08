@@ -57,6 +57,23 @@ tram_traffic_lights = {1: [[18, 59], 4, 5, True],
                        2: [[2, 43], 4, 5, True]
                        }
 
+'''Each value is a list of tuples: (number_of_other_lane, travelled_at_other, travelled_at_self'''
+car_lanes_going_through = {1: {'tram': [], 'pedestrian': []}, # Dla tych pasów 'tram'
+                           2: {'tram': [], 'pedestrian': []}, # nie ma znaczenia,
+                           3: {'tram': [], 'pedestrian': []}, # bo samochody
+                           4: {'tram': [], 'pedestrian': []}, # i tak nie będą
+                           5: {'tram': [], 'pedestrian': []}, # przejeżdżać po
+                           6: {'tram': [], 'pedestrian': []}, # innych pasach
+                           7: {'tram': [(1, 83, 44), (2, 29, 48)], 'pedestrian': []},
+                           8: {'tram': [(1, 79, 44), (2, 33, 48)], 'pedestrian': []},
+                           9: {'tram': [(1, 49, 48), (2, 63, 44)], 'pedestrian': []},
+                           10: {'tram': [(1, 45, 48), (2, 67, 44)], 'pedestrian': []},
+                           11: {'tram': [], 'pedestrian': []}} # ten też
+
+tram_lanes_going_through = {1: {'car': [(7, 49, 65), (8, 49, 61.5),
+                                        (9, 53, 31), (10, 53, 27)], 'pedestrian': []},
+                            2: {'car': [(7, 53, 11), (8, 53, 15),
+                                        (9, 49, 45.5), (10, 49, 49)], 'pedestrian': []}}
 '''
 dictionaries:
 -> car_lanes: [ lane_number : x or y initial position]
