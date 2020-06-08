@@ -3,12 +3,17 @@ screen_size = width, height = 100 * cell_size, 100 * cell_size
 lane_width = 4 * cell_size  # in meters
 
 tps = 100 # used to simulate cars
-fps = 100 # used in visualization
+fps = 50 # used in visualization
 car_speed_limit = 50
 car_spawn_prob = 0.1
 car_slow_prob = 0.45
 car_v_change = 1
 car_slow_duration = 2
+
+tram_speed_limit = 35
+tram_spawn_interval = 500
+tram_slow_prob = 0.05
+tram_v_change = 0.2
 
 """
 dictionary: 
@@ -48,6 +53,27 @@ traffic_lights = {1: None, # horizontal, turn-into west
                   11: [35, 4, 5, False]
                   }
 
+tram_traffic_lights = {1: [[18, 59], 4, 5, True],
+                       2: [[2, 43], 4, 5, True]
+                       }
+
+'''Each value is a list of tuples: (number_of_other_lane, travelled_at_other, travelled_at_self'''
+car_lanes_going_through = {1: {'tram': [], 'pedestrian': []}, # Dla tych pasów 'tram'
+                           2: {'tram': [], 'pedestrian': []}, # nie ma znaczenia,
+                           3: {'tram': [], 'pedestrian': []}, # bo samochody
+                           4: {'tram': [], 'pedestrian': []}, # i tak nie będą
+                           5: {'tram': [], 'pedestrian': []}, # przejeżdżać po
+                           6: {'tram': [], 'pedestrian': []}, # innych pasach
+                           7: {'tram': [(1, 83, 44), (2, 29, 48)], 'pedestrian': []},
+                           8: {'tram': [(1, 79, 44), (2, 33, 48)], 'pedestrian': []},
+                           9: {'tram': [(1, 49, 48), (2, 63, 44)], 'pedestrian': []},
+                           10: {'tram': [(1, 45, 48), (2, 67, 44)], 'pedestrian': []},
+                           11: {'tram': [], 'pedestrian': []}} # ten też
+
+tram_lanes_going_through = {1: {'car': [(7, 49, 65), (8, 49, 61.5),
+                                        (9, 53, 31), (10, 53, 27)], 'pedestrian': []},
+                            2: {'car': [(7, 53, 11), (8, 53, 15),
+                                        (9, 49, 45.5), (10, 49, 49)], 'pedestrian': []}}
 '''
 dictionaries:
 -> car_lanes: [ lane_number : x or y initial position]
