@@ -200,7 +200,7 @@ class Lane:
             return
 
         for index, veh in enumerate(self.vehicles):
-            if veh.max_velocity < 0:
+            if veh.max_velocity < 0  and veh.velocity_change < 0:
                 self.vehicles.pop(index)
         self.red_lit = False
         self.green_light_elapsed = 0
@@ -294,6 +294,11 @@ class TramLane(Lane):
             return
 
         index = self.find_index(distance)
+        
+        if len(self.vehicles) != 0 and self.vehicles[index-1].travelled >= distance and \
+        self.vehicles[index-1].travelled - self.vehicles[index-1].size['length'] <= distance:
+            return
+        
         tram_traffic_lights = vehicle.Vehicle(1, 2, -10, -10, 0, 0, distance, 0, 0)
         self.vehicles.insert(index, tram_traffic_lights)
         self.red_lit = True
@@ -308,14 +313,14 @@ class TramLane(Lane):
 
         index = 0
         while index < len(self.vehicles):
-            if self.vehicles[index].max_velocity < 0:
+            veh = self.vehicles[index]
+            if veh.max_velocity < 0 and veh.velocity_change < 0:
                 self.vehicles.pop(index)
                 index -= 1
             index += 1
 
         self.red_lit = False
         self.green_light_elapsed = 0
-        self.current_lights = 0
 
     def spawn(self):
         '''After set interval spawn new tram at the beginning of the lane'''
