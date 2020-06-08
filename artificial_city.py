@@ -33,7 +33,9 @@ CAR_LANES = {
     11: l.Lane(number=11)
 }
 
-PEDESTRIAN_LANES = {}
+PEDESTRIAN_LANES = {
+    # 1: l.Lane(number=1)
+}
 
 lights_test = CAR_LANES[6]
 
@@ -55,6 +57,7 @@ longer_v = Button("WYDŁUŻ PIONOWE ŚWIATŁA", config.width / 2 - 100, 60 * con
 shorter_v = Button("SKRÓĆ PIONOWE ŚWIATŁA", config.width / 2 - 100, 70 * config.cell_size, 200, 50, white, blue, decrease_green_light_time_vertical)
 prob_up = Button("ZWIĘKSZ PRAW. ZWALNIANIA", config.width / 2 - 100, 80 * config.cell_size, 200, 50, white, blue, lambda: increase_slowdown_prob(CAR_LANES))
 prob_down = Button("ZMNIEJSZ PRAW. ZWALNIANIA", config.width / 2 - 100, 90 * config.cell_size, 200, 50, white, blue, lambda: decrease_slowdown_prob(CAR_LANES))
+
 
 start_time = time.time()
 
@@ -92,8 +95,8 @@ while on:
 
             lane.update(going_through)
     
-        # for lane in PEDESTRIAN_LANES.values():
-        #     lane.update()
+        for lane in PEDESTRIAN_LANES.values():
+            lane.update()
     
     visualisation.draw(CAR_LANES, PEDESTRIAN_LANES, TRAM_LANES)
 

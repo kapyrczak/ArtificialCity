@@ -7,15 +7,15 @@ class Pedestrian:
 
     """
     slowDownProbability = 0.2
-    def __init__(self, length = 1, width = 1, vMax = 200, vChange = 0.01, velocity = 0,
-                  travelled = 0, safeDistance=1):
+    def __init__(self, length = 0.5, width = 0.5, vMax = 2, vChange = 0.01, velocity = 0,
+                  travelled = 0):
         self.length = length
         self.width = width
         self.vMax = vMax
         self.velocity = velocity
         self.vChange = vChange
         self.travelled = travelled
-        self.safeDistance = safeDistance
+        self.safeDistance = 0.5
 
 
     def accelerate(self):
