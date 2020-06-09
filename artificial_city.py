@@ -133,6 +133,7 @@ elapsed_time = end_time - start_time
 car_counter = 0
 for lane in CAR_LANES.values():
     car_counter += lane.went_through
+    print(lane.v_max)
 
 tram_counter = 0
 for lane in TRAM_LANES.values():
