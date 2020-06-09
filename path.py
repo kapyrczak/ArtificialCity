@@ -4,15 +4,14 @@ import config
 
 class Path:
     def __init__(self, number, length, pedestrians = [], spawnProbability = config.pedestrian_spawn_prob,
-        speedLimit = 1.5, ticksPerSecond=config.tps):
+        speedLimit = 0.8, ticksPerSecond=config.tps):
         self.number = number
         self.length = length
         self.pedestrians = pedestrians
         self.spawnProbability = spawnProbability
         self.speedLimit = speedLimit
         self.ticksPerSecond = ticksPerSecond
-        self.vMax = 1.5
-        self.startingVelocity = speedLimit
+        self.vMax = 0.8
         self.numberOfPedestrians = 0
 
 
@@ -36,6 +35,7 @@ class Path:
             if pedestrian.travelled > self.length:
                 var = self.pedestrians.index(pedestrian)
                 self.pedestrians.pop(var)
+                self.numberOfPedestrians += 1
 
     def movePedestrians(self):
        for pedestrian in self.pedestrians:
@@ -57,10 +57,6 @@ class Path:
         self.removePedestrians()
         if random.random() < self.spawnProbability:
             self.addPedestrian()
-
-
-
-
 
 
 
