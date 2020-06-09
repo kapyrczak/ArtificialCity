@@ -34,14 +34,19 @@ CAR_LANES = {
 }
 
 PEDESTRIAN_LANES = {
+
+
+
     1: p.Path(number=1, length=20),
 
     2: p.Path(number=2, length=20),
 
 
     3: p.Path(number=3, length=16),
-    4: p.Path(number=4, length=16),
+    4: p.Path(number=4, length=16)
+}
 
+"""
     5: p.Path(number=5, length=12),
     6: p.Path(number=6,length=12),
     7: p.Path(number=7, length=12),
@@ -52,6 +57,7 @@ PEDESTRIAN_LANES = {
     12: p.Path(number=10, length=12)
 
 }
+"""
 
 lights_test = CAR_LANES[6]
 
