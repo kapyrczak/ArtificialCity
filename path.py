@@ -4,14 +4,14 @@ import config
 
 class Path:
     def __init__(self, number, length =24, pedestrians = [], spawnProbability = config.pedestrian_spawn_prob,
-        speedLimit = 2, ticksPerSecond=config.pps):
+        speedLimit = 1.7, ticksPerSecond=config.pps):
         self.number = number
         self.length = length
         self.pedestrians = pedestrians
         self.spawnProbability = spawnProbability
         self.speedLimit = speedLimit
         self.ticksPerSecond = ticksPerSecond
-        self.vMax = 1.5
+        self.vMax = 1.7
         self.startingVelocity = speedLimit
         self.numberOfPedestrians = 0
 
