@@ -15,6 +15,11 @@ tram_spawn_interval = 500
 tram_slow_prob = 0.05
 tram_v_change = 0.2
 
+
+pps = 260
+pedestrian_spawn_prob = 0.02
+
+
 """
 dictionary: 
 {lane_from_number: [lane_into, at_length, untill_length, appear_at_travelled]}
