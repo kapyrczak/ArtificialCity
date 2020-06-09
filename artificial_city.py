@@ -34,7 +34,23 @@ CAR_LANES = {
 }
 
 PEDESTRIAN_LANES = {
-    # 1: l.Lane(number=1)
+    1: p.Path(number=1, length=20),
+
+    2: p.Path(number=2, length=20),
+
+
+    3: p.Path(number=3, length=16),
+    4: p.Path(number=4, length=16),
+
+    5: p.Path(number=5, length=12),
+    6: p.Path(number=6,length=12),
+    7: p.Path(number=7, length=12),
+    8: p.Path(number=8, length=12),
+    9: p.Path(number=9, length=12),
+    10: p.Path(number=10, length=12),
+    11: p.Path(number=11, length=12),
+    12: p.Path(number=10, length=12)
+
 }
 
 lights_test = CAR_LANES[6]
@@ -125,10 +141,15 @@ tram_counter = 0
 for lane in TRAM_LANES.values():
     tram_counter += lane.went_through
 
+pedestrian_counter = 0
+for lane in PEDESTRIAN_LANES.values():
+    pedestrian_counter += lane.numberOfPedestrians    
+    
 print("-------------------------------------------------------------")
 print("Simulation duration: %.3f" % elapsed_time)
 print('Number of cars that went through the intersection: ' + str(car_counter))
 print("Average number of cars exiting the intersection per second: %.3f" % (car_counter / elapsed_time))
 print("Number of trams that went through the intersection: " + str(tram_counter))
 print("Average number of trams exiting the intersection per second: %.3f" % (tram_counter / elapsed_time))
-
+print('Number of pedestrians that went through the intersection: ' + str(pedestrian_counter))
+print("Average number of pedestrians exiting the intersection per second: %.3f" % (pedestrian_counter / elapsed_time))
