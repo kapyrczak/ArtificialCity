@@ -2,7 +2,7 @@ cell_size = 9  # in px
 screen_size = width, height = 100 * cell_size, 100 * cell_size
 lane_width = 4 * cell_size  # in meters
 
-tps = 100 # used to simulate cars
+tps = 100 # used to simulate cars and pedestrians
 fps = 50 # used in visualization
 car_speed_limit = 50
 car_spawn_prob = 0.1
@@ -16,8 +16,10 @@ tram_slow_prob = 0.05
 tram_v_change = 0.2
 
 
-pps = 180
-pedestrian_spawn_prob = 0.015
+pedestrian_spawn_prob = 0.03
+pedestrian_speed_limit = 3
+pedestrian_v_change = 0.1
+pedestrian_slow_duration = 0.5
 
 
 """

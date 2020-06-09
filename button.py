@@ -7,6 +7,7 @@ Created on Thu Jun  4 18:10:05 2020
 """
 import pygame
 
+
 class Button:
     def __init__(self, msg, x, y, width, height, color, onhover_color, action=None):
         self.msg = msg
@@ -41,7 +42,9 @@ class Button:
         elif click[0] == 0 and self.pressed:
             self.pressed = False
 
+
 black = (0, 0, 0)
+
 
 def text_objects(text, font):
     textSurface = font.render(text, True, black)
