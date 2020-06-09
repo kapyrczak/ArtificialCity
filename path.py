@@ -3,16 +3,17 @@ import pedestrian
 import config
 
 class Path:
-    def __init__(self, number, length, pedestrians = [], spawnProbability = config.pedestrian_spawn_prob,
-        speedLimit = 0.8, ticksPerSecond=config.tps):
+    def __init__(self, number=1, length=20, spawnProbability = config.pedestrian_spawn_prob,
+        speedLimit = 3, ticksPerSecond=config.tps):
         self.number = number
         self.length = length
-        self.pedestrians = pedestrians
+        self.pedestrians = []
         self.spawnProbability = spawnProbability
         self.speedLimit = speedLimit
         self.ticksPerSecond = ticksPerSecond
-        self.vMax = 0.8
+        self.vMax = 2
         self.numberOfPedestrians = 0
+        self.red_lit = False
 
 
 
@@ -52,11 +53,12 @@ class Path:
 
 
     def update(self):
-        self.movePedestrians()
+        if self.red_lit is not True:
+            self.movePedestrians()
 
-        self.removePedestrians()
-        if random.random() < self.spawnProbability:
-            self.addPedestrian()
+            self.removePedestrians()
+            if random.random() < self.spawnProbability:
+                self.addPedestrian()
 
 
 
