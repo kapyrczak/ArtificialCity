@@ -58,9 +58,8 @@ class Lane:
         self.spawn()
         self.update_lights()
 
-        v_m = 0
         for car in self.vehicles:
-            self.v_max = max(v_m, car.velocity)
+            self.v_max = max(self.v_max, car.velocity)
 
     def check_through_lanes(self, through_lanes):
         '''For each car on lane check if other lane (ahead) is busy'''
@@ -314,6 +313,9 @@ class TramLane(Lane):
         index = 0
         while index < len(self.vehicles):
             veh = self.vehicles[index]
+            if index + 1 > len(self.vehicles) and self.vehicles[index+1].travelled >= veh.travelled and \
+            self.vehicles[index+1].travelled - self.vehicles[index+1].size['length'] <= veh.travelled:
+                continue
             if veh.max_velocity < 0 and veh.velocity_change < 0:
                 self.vehicles.pop(index)
                 index -= 1

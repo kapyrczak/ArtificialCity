@@ -102,6 +102,9 @@ def increase_green_light_time_vertical():
     for lane_number in h_lane_numbers:
         config.traffic_lights[lane_number][2] += 0.5
 
+    for lane in config.tram_traffic_lights.values():
+        lane[2] += 0.5
+
     if old != config.traffic_lights[v_lane_numbers[0]][1]:
         print("Current green light time for VERTICAL lanes: %.2f s." % config.traffic_lights[v_lane_numbers[0]][1])
 
@@ -115,6 +118,9 @@ def decrease_green_light_time_vertical():
         config.traffic_lights[lane_number][1] = max(config.traffic_lights[lane_number][1] - 0.5, 0.5)
     for lane_number in h_lane_numbers:
         config.traffic_lights[lane_number][2] = max(config.traffic_lights[lane_number][2] - 0.5, 0.5)
+
+    for lane in config.tram_traffic_lights.values():
+        lane[2] = max(lane[2] - 0.5, 0.5)
 
     if old != config.traffic_lights[v_lane_numbers[0]][1]:
         print("Current green light time for VERTICAL lanes: %.2f s." % config.traffic_lights[v_lane_numbers[0]][1])
