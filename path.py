@@ -2,9 +2,10 @@ import random
 import pedestrian
 import config
 
+
 class Path:
-    def __init__(self, number=1, length=20, spawnProbability = config.pedestrian_spawn_prob,
-        speedLimit = 3, ticksPerSecond=config.tps):
+    def __init__(self, number=1, length=20, spawnProbability=config.pedestrian_spawn_prob,
+                 speedLimit=3, ticksPerSecond=config.tps):
         self.number = number
         self.length = length
         self.pedestrians = []
@@ -15,11 +16,7 @@ class Path:
         self.numberOfPedestrians = 0
         self.red_lit = False
 
-
-
-
-    def addPedestrian(self, length = 1, width = 1, vChange = 0.1, velocity = 0.05, travelled = -1):
-
+    def addPedestrian(self, length=1, width=1, vChange=0.1, velocity=0.05, travelled=0):
 
         newPedestrian = pedestrian.Pedestrian(
             length, width,
@@ -39,18 +36,17 @@ class Path:
                 self.numberOfPedestrians += 1
 
     def movePedestrians(self):
-       for pedestrian in self.pedestrians:
-           pedestrian.accelerate()
-       for index in range(1, len(self.pedestrians)):
-           curr = self.pedestrians[index-1]
-           next = self.pedestrians[index]
-           curr.keepSafeVelocity(next)
+        for pedestrian in self.pedestrians:
+            pedestrian.accelerate()
+        for index in range(1, len(self.pedestrians)):
+            curr = self.pedestrians[index - 1]
+            next = self.pedestrians[index]
+            curr.keepSafeVelocity(next)
 
-       for pedestrian in self.pedestrians:
-           pedestrian.randomize()
-       for pedestrian in self.pedestrians:
-           pedestrian.move()
-
+        for pedestrian in self.pedestrians:
+            pedestrian.randomize()
+        for pedestrian in self.pedestrians:
+            pedestrian.move()
 
     def update(self):
         if self.red_lit is not True:
@@ -59,10 +55,3 @@ class Path:
             self.removePedestrians()
             if random.random() < self.spawnProbability:
                 self.addPedestrian()
-
-
-
-
-
-
-

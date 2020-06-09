@@ -15,6 +15,7 @@ Nagel-Schreckenberg model simulation steps:
 
 import random
 
+
 class Vehicle:
     """
     size:
@@ -29,6 +30,7 @@ class Vehicle:
         'randomization' phase
     travelled - distance from the beggining of the lane
     """
+
     def __init__(self, length=4, width=2,
                  v_max=14, v_change=1, current=0,
                  slowdown_probability=0.5,

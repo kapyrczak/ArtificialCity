@@ -8,9 +8,11 @@ Created on Tue Jun  2 20:24:25 2020
 
 import config
 
+
 def switch_simulation(flag):
     flag[0] = not flag[0]
     print("Simulation running: " + str(flag[0]))
+
 
 def increase_fps():
     old = config.fps
@@ -20,6 +22,7 @@ def increase_fps():
     if old != config.fps:
         print("Current fps: " + str(config.fps))
 
+
 def decrease_fps():
     old = config.fps
 
@@ -27,6 +30,7 @@ def decrease_fps():
 
     if old != config.fps:
         print("Current fps: " + str(config.fps))
+
 
 def increase_slowdown_prob(CAR_LANES):
     old = config.car_slow_prob
@@ -40,6 +44,7 @@ def increase_slowdown_prob(CAR_LANES):
     if old != config.car_slow_prob:
         print("Current car slowdown probability: " + str(config.car_slow_prob))
 
+
 def decrease_slowdown_prob(CAR_LANES):
     old = config.car_slow_prob
 
@@ -51,6 +56,7 @@ def decrease_slowdown_prob(CAR_LANES):
 
     if old != config.car_slow_prob:
         print("Current car slowdown probability: " + str(config.car_slow_prob))
+
 
 def increase_green_light_time_horizontal():
     h_lane_numbers = [2, 3, 4]
@@ -68,6 +74,7 @@ def increase_green_light_time_horizontal():
     if old != config.traffic_lights[h_lane_numbers[0]][1]:
         print("Current green light time for HORIZONTAL lanes: %.2f s." % config.traffic_lights[h_lane_numbers[0]][1])
 
+
 def decrease_green_light_time_horizontal():
     h_lane_numbers = [2, 3, 4]
     v_lane_numbers = [6, 7, 8, 9, 10, 11]
@@ -84,6 +91,7 @@ def decrease_green_light_time_horizontal():
     if old != config.traffic_lights[h_lane_numbers[0]][1]:
         print("Current green light time for HORIZONTAL lanes: %.2f s." % config.traffic_lights[h_lane_numbers[0]][1])
 
+
 def increase_green_light_time_vertical():
     h_lane_numbers = [2, 3, 4]
     v_lane_numbers = [6, 7, 8, 9, 10, 11]
@@ -96,6 +104,7 @@ def increase_green_light_time_vertical():
 
     if old != config.traffic_lights[v_lane_numbers[0]][1]:
         print("Current green light time for VERTICAL lanes: %.2f s." % config.traffic_lights[v_lane_numbers[0]][1])
+
 
 def decrease_green_light_time_vertical():
     h_lane_numbers = [2, 3, 4]
