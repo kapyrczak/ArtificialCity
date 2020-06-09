@@ -16,8 +16,8 @@ tram_slow_prob = 0.05
 tram_v_change = 0.2
 
 
-pps = 260
-pedestrian_spawn_prob = 0.02
+pps = 180
+pedestrian_spawn_prob = 0.015
 
 
 """
