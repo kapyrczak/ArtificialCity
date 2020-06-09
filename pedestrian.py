@@ -7,7 +7,7 @@ class Pedestrian:
 
     """
     slowDownProbability = 0.8
-    def __init__(self, length = 0.5, width = 0.5, vMax = 0.8, vChange = 0.001, velocity = 0,
+    def __init__(self, length = 1, width = 1, vMax = 3, vChange = 0.8, velocity = 0,
                   travelled = 0):
         self.length = length
         self.width = width
@@ -15,7 +15,9 @@ class Pedestrian:
         self.velocity = velocity
         self.vChange = vChange
         self.travelled = travelled
-        self.safeDistance = 0.7
+        self.safeDistance = 1
+
+
 
     def accelerate(self):
         if self.velocity < self.vMax:
@@ -50,3 +52,5 @@ class Pedestrian:
 
     def move(self):
         self.travelled += self.velocity
+
+
